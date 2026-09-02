@@ -1,0 +1,2 @@
+2963edb44a57dea4bb8b5404a7791b0b1c65b9b3475091e0766510aa00c44cb9  MANIFEST_SHA256.txt
+513067f2e687adb52feb3ad4c5b98c88a48b84e38e9eb47fa92ce44d2a4c95b1  paper/Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs.pdf

@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "Please cite the manuscript as below. The companion software is MIT-licensed; the manuscript has the separate copyright boundary in LICENSE_SCOPE.md."
+title: "Symmetry Premiums, Cyclic-Closure Coverage, and Defect-Spectrum Persistence in Kautz Digraphs"
+type: software
+version: "1.0.0"
+authors:
+  - family-names: Babanskyy
+    given-names: Oleksiy
+    orcid: "https://orcid.org/0009-0001-6176-6208"
+repository-code: "https://github.com/aconsciousfractal/FCIG-Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs"
+license: MIT
+keywords:
+  - Kautz-digraphs
+  - feedback-vertex-sets
+  - reverse-complement-symmetry
+  - cyclic-closure
+  - defect-spectrum
+  - exact-enumeration
+abstract: >-
+  Manuscript and exact reproducibility companion for symmetry premiums,
+  cyclic-closure coverage, obstruction clutters, and finite defect-spectrum
+  certificates in length-three Kautz digraphs. The package makes no novelty,
+  priority, exhaustive-literature, or global facet-graph claim.
+preferred-citation:
+  type: article
+  title: "Symmetry Premiums, Cyclic-Closure Coverage, and Defect-Spectrum Persistence in Kautz Digraphs"
+  authors:
+    - family-names: Babanskyy
+      given-names: Oleksiy
+      orcid: "https://orcid.org/0009-0001-6176-6208"
+  year: 2026

@@ -1,0 +1,3 @@
+# Direct dependencies. Verification code itself uses only the standard library.
+pytest==9.1.1
+pypdf==6.14.2

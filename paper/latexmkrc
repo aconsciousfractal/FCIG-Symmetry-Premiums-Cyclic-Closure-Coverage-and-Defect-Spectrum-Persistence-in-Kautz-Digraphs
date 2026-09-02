@@ -1,0 +1,5 @@
+$pdf_mode = 4;
+$bibtex_use = 2;
+$jobname = 'Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs';
+$max_repeat = 8;
+$recorder = 1;

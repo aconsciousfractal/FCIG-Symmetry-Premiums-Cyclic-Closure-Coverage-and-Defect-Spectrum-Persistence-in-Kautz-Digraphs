@@ -1,0 +1,37 @@
+{
+  "bundle": {
+    "bytes": 15203390,
+    "entries": 3519,
+    "format": "ZIP_STORED_FIXED_1980_TIMESTAMP_UNIX_MODE_0644_SORTED_PATHS",
+    "path": "companion/data/bellman_tables.ksbellman",
+    "sha256": "c4695820ffc1b84606d9f006edd4f66c77028b6823e6b2f780ffc3bdf1a9b2fa",
+    "tables": 3518
+  },
+  "coordinate": {
+    "f": 0,
+    "involution": "(01)(23)(45)",
+    "m": 3,
+    "q": 6
+  },
+  "memberships": {
+    "bytes": 3065801,
+    "path": "companion/data/mask_memberships.jsonl.gz",
+    "rows": 83736,
+    "sha256": "e5c8c617c2bd9d9205d536c02274855cfba6192e3c8aacb92cbbc0cb5969dd09"
+  },
+  "provenance_boundary": "Public identifiers and container headers were regenerated deterministically from the frozen scientific closures, Bellman tables, orders, and mask memberships; private workflow metadata and historical custody chains are not included.",
+  "schema": "kautz-symmetry-bellman-bundle-metadata-v1",
+  "summary": {
+    "mask_count": 83736,
+    "prefix_states": 1093156,
+    "suffix_states": 1093156,
+    "work_count": 1759,
+    "work_defect_histogram": {
+      "0": 445,
+      "1": 555,
+      "2": 420,
+      "3": 297,
+      "4": 42
+    }
+  }
+}

@@ -1,0 +1,1088 @@
+\documentclass[11pt,a4paper]{article}
+\pdfvariable trailerid {[
+  <2BA4891E65C7A4C827CFA11C906CE6B0>
+  <2BA4891E65C7A4C827CFA11C906CE6B0>
+]}
+\pdfextension catalog {/Lang (en-US)}
+
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,enumitem,microtype,tabularx}
+\usepackage[a4paper,margin=28mm]{geometry}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
+ urlcolor=blue!55!black]{hyperref}
+\Urlmuskip=0mu plus 2mu\relax
+
+\hypersetup{
+  pdftitle={Symmetry premiums, cyclic-closure coverage, and defect-spectrum persistence in Kautz digraphs},
+  pdfauthor={Oleksiy Babanskyy},
+  pdfsubject={Invariant feedback vertex sets under reverse-complement symmetries},
+  pdfkeywords={Kautz digraphs, feedback vertex sets, involutions, cyclic closure, defect spectrum}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Kautz}{\mathrm K}
+\newcommand{\Top}{\operatorname{Top}}
+\newcommand{\cl}{\operatorname{cl}}
+\newcommand{\Dspec}{\mathcal D}
+
+\title{Symmetry premiums, cyclic-closure coverage, and\\
+defect-spectrum persistence in Kautz digraphs}
+\author{Oleksiy Babanskyy}
+\date{}
+
+\begin{document}
+\pagestyle{plain}
+
+\maketitle
+
+\begin{abstract}
+Let an involution of type \(2^m1^f\), \(m\geq1\), act on length-three
+Kautz words by letterwise involution followed by reversal.  We prove that the
+minimum invariant feedback vertex number is the ordinary value plus \(m^2\),
+with surcharge \(m+m(m-1)\) split into local orbit forcing and a global
+acyclicity cost.  Every invariant optimum is the full cyclic closure of an
+ordinary optimum exactly when \(m=1\) in the nonidentity domain; the identity
+case is stated separately.  For the order-cone defect spectrum we prove the
+monotonicity
+\[
+  \Dspec_{r,0}\subseteq\Dspec_{m,f}
+  \qquad(m\geq r\geq1,\ f\geq0).
+\]
+An exact finite census at \((m,f)=(3,0)\), accompanied here by one explicit
+certificate for each value, therefore implies that defects \(0,1,2,3,4\)
+are all attained for every \(m\geq3\) and \(f\geq0\).  This last conclusion
+is attainability only: no equality of later spectra, general upper bound four,
+or interval theorem is asserted.  More generally, defect is the transversal
+number of the clutter of minimal infeasible bad-cell constraints.  Forced
+cells and a matching of pairwise incompatibilities give a sound lower
+certificate, while a four-letter rank-three example shows that this
+certificate need not be exact.  At the six-letter base, a ten-relation
+precedence core forces four bad triangle cells by a \(2+1+1\) argument and
+occurs in exactly 24 of the 1,759 symmetry classes in the census.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Kautz digraphs; feedback vertex sets;
+reverse-complement symmetry; cyclic closure; defect spectra; exact census.
+
+\medskip
+\noindent\textbf{MSC 2020:} 05C20 (primary); 05C69 (secondary).
+
+\medskip
+\noindent\textbf{Reproducibility package:}
+\url{https://github.com/aconsciousfractal/FCIG-Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs}
+
+\section{Introduction}
+\label{sec:introduction}
+
+Feedback vertex sets in Kautz digraphs admit a useful line-digraph
+description: a vertex deletion problem on length-three words becomes a
+feedback arc problem on length-two words.  We study this problem under the
+reverse-complement symmetry obtained by reversing a word and applying a
+letter involution.  Three questions then separate naturally: what is the
+exact cost of invariance, when are all invariant optima generated from
+ordinary optima by cyclic closure, and which losses occur inside the
+topological-order cone of an invariant optimum?  Here the cyclic closure of
+a set (F) means \(\cl_{\Theta}(F)=F\cup\Theta_\sigma(F)\).
+
+Our main contributions are as follows.
+\begin{enumerate}[leftmargin=*]
+\item For an involution of type \(2^m1^f\), the invariant optimum exceeds the
+ordinary feedback vertex number by exactly \(m^2\).  The surcharge splits as
+\(m+m(m-1)\) into a local orbit-forcing term and a global acyclicity term.
+\item Complete cyclic-closure coverage holds exactly for one moving
+transposition block; when \(m\geq2\), closure-generated and non-closure-
+generated invariant optima coexist.
+\item The defect spectrum is monotone under adjoining moving blocks and fixed
+letters.  A certified six-letter base therefore yields persistent attained
+defects \(0,1,2,3,4\) for every \(m\geq3\).
+\item Defect equals the transversal number of an exact obstruction clutter.
+Its singleton and pair members yield a forced-cell-plus-matching lower bound,
+which a rank-three four-letter obstruction shows need not always be tight.
+\item A ten-relation order core gives a short human explanation for a family
+of extremal defect-four objects in the six-letter census.
+\end{enumerate}
+
+The ordinary value and cycle-cell substrate are known
+\cite{XuWuHuangYang2007,XuYinZhangHuang2014}.  The feedback-arc/order and
+line-digraph correspondences are classical
+\cite{Younger1963,CheungKuh1974}.  We use only the elementary
+antisymmetrization device behind Section~9 of Goldberg--Karzanov
+\cite{GoldbergKarzanov2004}; no Kautz-specific theorem is imported from that
+paper.  Adjacent work on symmetric decycling sets in binary de Bruijn graphs
+uses reverse complementation to define the \(k\)-nonical space
+\cite{MarcaisElderKingsford2024}.  Its graph family, alphabet, object and
+optimization target differ from ours; we import no result from it and infer no
+priority from that comparison.  Earlier work by the present author proves an
+existence-and-parity criterion for literal reverse-complement-invariant
+ordinary minimum decycling sets in \(q\)-ary de Bruijn graphs
+\cite{Babanskyy2026Parity}.  The present paper instead treats length-three
+Kautz digraphs, allows an invariance premium over the ordinary optimum, and
+studies closure coverage and order-cone defect; no theorem is transferred
+between the two graph families.  The full texts of two potentially relevant
+Kautz sources
+\cite{Yin2015Thesis,ZhangXuYangYin2016} could not be obtained.  We therefore
+make no claim of bibliographic priority or source completeness.
+
+\section{Ordinary Kautz substrate and notation}
+\label{sec:ordinary}
+
+Let \(A\) be an alphabet of size \(q\geq2\).  The vertices of
+\(\Kautz(q-1,k)\) are the words \(x_1\cdots x_k\) with adjacent letters
+distinct, and an arc shifts one position to the left.  Put
+\[
+ H=\Kautz(q-1,2),\qquad \Kautz(q-1,3)=L(H).
+\]
+Thus a word \(xyz\) is also the predecessor arc \(xy\to yz\) of \(H\).
+Write
+\[
+ S_{q-1}=\frac{q(q-1)(2q-1)}6,
+ \qquad
+ \beta_q=\binom q2+4\binom q3.
+\]
+
+\begin{proposition}[Ordinary substrate; known background]
+\label{prop:ordinary-substrate}
+The minimum feedback vertex number of \(\Kautz(q-1,3)\) is \(S_{q-1}\),
+and the maximum number of forward predecessor arcs in a total order of
+\(V(H)\) is \(\beta_q\).
+\end{proposition}
+
+\begin{proof}
+The arcs of \(H\) partition into one directed digon for each unordered pair
+of letters and two oriented directed triangles for each unordered triple.
+Every feedback arc set meets every cell, giving
+\(\binom q2+2\binom q3=S_{q-1}\).  Given a total order on \(A\), delete the
+strict middle peaks \(xyz\) with \(y>x,y>z\).  Their number is
+\(\sum_{i=0}^{q-1}i^2=S_{q-1}\), and the standard descending-then-ascending
+order of the pairs \(xy\) makes the complement acyclic.  Finally
+\[
+ q(q-1)^2-S_{q-1}=\binom q2+4\binom q3=\beta_q.
+\]
+The result and construction are cited background; the proof fixes our
+normalization and the line-digraph crosswalk.
+\end{proof}
+
+\section{Symmetry, order cones, and defect}
+\label{sec:setup}
+
+Let \(\sigma\) be an involution of \(A\), of cycle type \(2^m1^f\), and put
+\[
+ \Theta_\sigma(xyz)=\sigma(z)\sigma(y)\sigma(x),
+ \qquad j(xy)=\sigma(y)\sigma(x).
+\]
+On predecessor arcs the induced anti-action is
+\(\rho(u,v)=(j(v),j(u))\).  Let \(\tau_\sigma\) be the minimum size of a
+\(\Theta_\sigma\)-stable feedback vertex set and
+\(\Delta_\sigma=\tau_\sigma-S_{q-1}\).
+
+Let \(\mathcal C\) denote the digon-and-oriented-triangle partition above and
+let \(G_\sigma=\langle\Theta_\sigma\rangle\) act on its cells.  For one
+representative \(C\) of each cell orbit, put
+\[
+ H_C=\operatorname{Stab}_{G_\sigma}(C),
+ \qquad s(C)=\min_{v\in C}|H_Cv|.
+\]
+
+\begin{proposition}[Invariant cell-transversal formula]
+\label{prop:cell-orbit}
+The minimum size of an invariant cell transversal is
+\[
+ L_\sigma=\sum_{[C]\in\mathcal C/G_\sigma}|G_\sigma C|s(C).
+\]
+Consequently
+\[
+ \ell_\sigma=L_\sigma-S_{q-1},\qquad
+ g_\sigma=\tau_\sigma-L_\sigma,\qquad
+ \Delta_\sigma=\ell_\sigma+g_\sigma.
+\]
+\end{proposition}
+
+\begin{proof}
+Let \(X\) be an invariant cell transversal and take \(v\in X\cap C\).
+Invariance forces \(G_\sigma v\subseteq X\), while the cell partition gives
+\(\operatorname{Stab}_{G_\sigma}(v)\leq H_C\).  Hence orbit--stabilizer gives
+\[
+ |G_\sigma v|
+ =[G_\sigma:H_C]\,[H_C:\operatorname{Stab}_{G_\sigma}(v)]
+ =|G_\sigma C|\,|H_Cv|.
+\]
+The inverse images of distinct cell orbits are disjoint, so summing gives the
+lower bound.  Conversely, choose in every representative cell a vertex
+attaining \(s(C)\) and take the union of its full \(G_\sigma\)-orbit.  This
+invariant set meets every cell and attains the displayed sum.  Finally, the
+cells are disjoint and their number is \(S_{q-1}\), whereas every feedback
+set meets every cell.  Thus \(S_{q-1}\leq L_\sigma\leq\tau_\sigma\), proving
+the decomposition and nonnegativity.
+\end{proof}
+
+Let \(P\) be a maximum \(\rho\)-stable acyclic predecessor arc set.  For
+\(\omega\in\Top(P)\), write \(A_\omega\) for all ambient arcs of \(H\)
+directed forward by \(\omega\), and define
+\[
+ \delta_H(P)=\beta_q-
+ \max_{\omega\in\Top(P)}|A_\omega|.                 \tag{3.1}
+\]
+Let \(b(\omega)\) count the oriented-triangle cells having only one forward
+arc in \(\omega\).
+
+\begin{lemma}[Bad-triangle formula]
+\label{lem:bad-triangle}
+For every total order \(\omega\),
+\(|A_\omega|=\beta_q-b(\omega)\); hence
+\(\delta_H(P)=\min_{\omega\in\Top(P)}b(\omega)\).
+\end{lemma}
+
+\begin{proof}
+Every digon has one forward arc.  Every directed triangle has one or two;
+if \(b\) of the \(2\binom q3\) triangles have one, the score is
+\(\binom q2+b+2(2\binom q3-b)=\beta_q-b\).
+\end{proof}
+
+For an ordinary feedback set \(F\), put
+\(\cl_\Theta(F)=F\cup\Theta_\sigma(F)\).
+
+\begin{lemma}[Order-cone dictionary; standard-derived]
+\label{lem:order-cone}
+The invariant minimum complementary to \(P\) is a full cyclic closure of an
+ordinary minimum if and only if \(\delta_H(P)=0\).
+\end{lemma}
+
+\begin{proof}
+Every acyclic arc set lies in the forward set of a topological order, and it
+lies in an ordinary maximum precisely when such an order has score
+\(\beta_q\).  If \(P\subseteq A_\omega\) with that score, stability gives
+\(P\subseteq A_\omega\cap\rho(A_\omega)\); the intersection is stable and
+acyclic, so maximality forces equality.  Complementation gives the full
+closure of the ordinary minimum \(E(H)\setminus A_\omega\).  Conversely, if
+the complement of \(P\) is such a closure, then \(P\) is contained in the
+complementary ordinary maximum and therefore has a topological order of
+score \(\beta_q\).
+\end{proof}
+
+\section{Exact symmetry premium and its split}
+\label{sec:premium}
+
+For the fixed-point-free case write the transposition blocks as
+\(B_i=\{a_i,b_i\}\), \(0\leq i<m\), and \(\bar a_i=b_i\).
+
+\begin{theorem}[Exact premium and local/global split]
+\label{thm:premium}
+If \(\sigma\) has type \(2^m\), \(m\geq1\), on \(q=2m\) letters, then
+\[
+ \tau_\sigma(\Kautz(2m-1,3))=S_{2m-1}+m^2,
+ \quad \Delta_\sigma=m^2,
+ \quad \ell_\sigma=m,
+ \quad g_\sigma=m(m-1).
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:potential-completion} below, a maximum stable predecessor
+DAG is \(I(h)=\{u\to v:h(u)<h(v)\}\) for an antisymmetric potential
+\(h\circ j=-h\).  The fixed predecessor vertices \(a_ib_i,b_ia_i\) have
+level zero.  The remaining arcs split into disjoint sectors.  Cross arcs
+between a free pair and fixed vertices form \(2m(m-1)\) four-cycles, each
+contributing at most two, for \(4m(m-1)\).  Each unordered pair of blocks
+has four digons and two four-cycles among the nonfixed vertices, contributing
+at most \(4+2\cdot3=10\).  Each unordered triple of blocks has sixteen
+directed triangles, each contributing at most two, for \(32\).  Hence
+\[
+ |I(h)|\leq B_m:=4m(m-1)+10\binom m2+32\binom m3
+ =\frac{m(m-1)(16m-5)}3.                           \tag{4.1}
+\]
+
+This bound is sharp.  Put \(\lambda_i=4^{m-1-i}\), set
+\(c_{ij}=2\lambda_j\) for \(i<j\), \(c_{ji}=-c_{ij}\), and identify
+\(i^-=a_i,i^+=b_i\).  Define
+\[
+ h(i^\varepsilon j^\delta)
+ =\varepsilon\lambda_i+\delta\lambda_j+c_{ij}
+ \qquad(\varepsilon,\delta\in\{-1,+1\}).             \tag{4.2}
+\]
+It is antisymmetric.  If \(i<j\), its sign is \(\varepsilon\), so every
+cross four-cycle contributes two.  In a two-block sector the two alternating
+directions have differences
+\[
+ (\eta-\varepsilon)\lambda_i-4\lambda_j,
+ \qquad (\zeta-\delta)\lambda_j+4\lambda_j;
+\]
+exactly \(2+8=10\) arcs increase.  For \(i<j<k\), the three cyclic
+differences are
+\[
+ -\varepsilon\lambda_i-2\lambda_j+(\gamma+2)\lambda_k,
+ \quad \varepsilon\lambda_i-\delta\lambda_j-4\lambda_k,
+ \quad (\delta+2)\lambda_j+(2-\gamma)\lambda_k.
+\]
+Their signs are \((-\varepsilon,\varepsilon,+)\), since
+\(\lambda_i\geq4\lambda_j\geq16\lambda_k\); exactly two arcs increase in
+each directed triangle.  Thus every sector bound is attained.
+
+Since \(H\) has \(2m(2m-1)^2\) arcs, complementation gives
+\[
+ \tau_\sigma=2m(2m-1)^2-B_m=S_{2m-1}+m^2.
+\]
+For the local term, precisely the \(m\) within-block digon cells are fixed
+with their two vertices exchanged, forcing two rather than one selected
+vertex.  Every other cell orbit has trivial internal stabilizer and attains
+the ordinary cell cost.  Proposition~\ref{prop:cell-orbit} gives
+\(L_\sigma=S_{2m-1}+m\), and hence
+\(\ell_\sigma=m\) and \(g_\sigma=m^2-m\).
+\end{proof}
+
+\section{Fixed letters and zero/one constructions}
+\label{sec:constructions}
+
+\begin{lemma}[Exact fixed-letter transport]
+\label{lem:fixed-letter}
+Adjoining one \(\sigma\)-fixed letter \(t\) to an alphabet \(B\) of size
+\(n\) increases the ordinary and invariant feedback optima by \(n^2\),
+preserves the symmetry premium and its local/global split, and sends a
+canonical lifted maximum predecessor DAG to one of exactly the same defect.
+\end{lemma}
+
+\begin{proof}
+For a feedback set \(M_B\), put
+\[
+ M_{B+t}=M_B\cup X_t,\qquad X_t=\{xtz:x,z\in B\}.       \tag{5.1}
+\]
+Extend a topological order of the old residual by placing all \(ta\) before
+all old pairs and all \(at\) after them.  The retained new words are forward,
+so (5.1) is a feedback set.  The \(n\) new digons and
+\(2\binom n2\) new oriented triangles are disjoint and total \(n^2\); every
+feedback set must meet all of them.  This proves the ordinary increment.
+The set \(X_t\) is invariant, and restriction of an invariant feedback set is
+invariant, giving the same invariant increment.  Its unique middle-\(t\)
+choice meets each new cell orbit minimally, so the split is preserved.
+
+Let \(P^\uparrow\) be the residual of (5.1).  Restricting a topological order
+of \(P^\uparrow\) to \(B\) shows
+\(\delta_{B+t}(P^\uparrow)\geq\delta_B(P)\), because new cells contribute
+at most \(\beta_{n+1}-\beta_n\).  The displayed extended order attains the
+maximum in every new cell, giving the reverse inequality.  Thus the defect
+is preserved, and the construction iterates.
+\end{proof}
+
+\begin{corollary}[Premium with fixed letters]
+\label{cor:premium-general}
+For type \(2^m1^f\), \(m\geq1,f\geq0,q=2m+f\),
+\[
+ \tau_\sigma(\Kautz(q-1,3))=S_{q-1}+m^2,
+ \quad(\ell_\sigma,g_\sigma)=(m,m(m-1)).
+\]
+\end{corollary}
+
+\begin{proof}
+Iterate Lemma~\ref{lem:fixed-letter} from Theorem~\ref{thm:premium}.
+\end{proof}
+
+\begin{proposition}[Four-letter seeds]
+\label{prop:four-letter}
+For \(A=\{0,1,2,3\}\) and \(\sigma=(01)(23)\), maximum invariant
+predecessor DAGs of defects zero and one both exist.
+\end{proposition}
+
+\begin{proof}
+Here \(\beta_4=22\) and every invariant minimum has size \(18\).  For defect
+zero, take the ordinary minimum
+\[
+ M=\{010,012,132,202,210,212,232,301,302,303,310,312,313,320\}
+\]
+and its closure
+\[
+ \begin{aligned}
+ N_0=M\cup\Theta(M)=\{&010,012,101,102,103,132,202,210,212,\\
+                       &232,301,302,303,310,312,313,320,323\}.
+ \end{aligned}
+\]
+The complement of \(M\) is forward in
+\(10<02<12<20<01<03<32<21<13<23<30<31\), while the complement of
+\(N_0\) is forward in
+\(02<10<12<20<01<03<23<32<21<13<30<31\).  Hence both are optimal and
+the residual of \(N_0\) has defect zero by Lemma~\ref{lem:order-cone}.
+
+For defect one, let
+\[
+ N_1=\{010,013,021,030,031,032,101,102,121,123,201,202,
+ 230,232,310,313,321,323\}.
+\]
+It is invariant, and its complement is forward in
+\[
+ 21<10<13<30<01<02<23<31<12<32<20<03.
+\]
+This order scores \(21\), with unique bad cell
+\(\{031,310,103\}\).  Defect zero would force an ordinary minimum
+\(M\subseteq N_1\) whose cyclic closure is \(N_1\).  Such an \(M\) contains
+exactly one word from each of the fourteen cycle cells.  Ten singleton
+intersections force
+\[
+ 202,030,121,313,201,013,230,032,123,321.
+\]
+The remaining digons force one of \(010,101\) and one of \(232,323\).
+The final two triangle choices must be either \(\{021,310\}\) or
+\(\{102,031\}\).  In the first case the residual contains
+\[
+ 312\to120\to203\to031\to312,
+\]
+and in the second it contains
+\[
+ 213\to130\to302\to021\to213.
+\]
+Neither candidate is a feedback vertex set, independently of the two digon
+choices.  Thus the defect is positive and therefore exactly one.
+\end{proof}
+
+\begin{theorem}[Uniform zero/one construction]
+\label{thm:zero-one}
+For every \(m\geq1,f\geq0\), defect zero is attained.  For every
+\(m\geq2,f\geq0\), defect one is attained.
+\end{theorem}
+
+\begin{proof}
+For \(m=1\), the empty moved-core is the unique maximum and has defect zero.
+Lemma~\ref{lem:potential-completion} and
+Proposition~\ref{prop:sharp-core} represent this seed and both four-letter
+seeds of Proposition~\ref{prop:four-letter} as \(I(h)\) for sharp
+antisymmetric potentials.
+Lemmas~\ref{lem:dominant-extension} and \ref{lem:defect-extension} below
+extend a sharp core by one moving block while preserving its exact defect.
+They therefore propagate the zero seed from \(m=1\), and the defect-one seed
+of Proposition~\ref{prop:four-letter} from \(m=2\), to every larger \(m\).
+Lemma~\ref{lem:fixed-letter} then propagates both families over all \(f\).
+The cited lemmas are independently proved in Section~\ref{sec:extension}, so
+this forward reference is not circular.
+\end{proof}
+
+\section{Fixed-digon ceiling and closure coverage}
+\label{sec:coverage}
+
+\begin{proposition}[Fixed-digon defect ceiling]
+\label{prop:ceiling}
+Every maximum \(\rho\)-stable predecessor DAG \(P\) of type \(2^m1^f\),
+\(m\geq1\), satisfies
+\[
+ 0\leq\delta_H(P)\leq m(m-1).
+\]
+\end{proposition}
+
+\begin{proof}
+For each moving block, the vertices \(a_ib_i,b_ia_i\) are fixed by \(j\),
+while the two arcs between them are exchanged by \(\rho\).  A stable DAG
+contains neither.  Every topological order recovers exactly one forward arc
+from each such omitted digon.  By Corollary~\ref{cor:premium-general},
+\(|P|=\beta_q-m^2\), so every \(\omega\in\Top(P)\) has
+\(|A_\omega|\geq\beta_q-m^2+m\).  Subtracting the maximum score from
+\(\beta_q\) proves the bound.
+\end{proof}
+
+\begin{theorem}[Cyclic-closure coverage]
+\label{thm:coverage}
+For every nonidentity involution of type \(2^m1^f\), \(m\geq1,f\geq0\):
+every maximum invariant predecessor DAG has defect in
+\([0,m(m-1)]\); a zero-defect maximum exists; an exact defect-one maximum
+exists for \(m\geq2\); and every invariant minimum is a full cyclic closure
+of an ordinary minimum if and only if \(m=1\).
+\end{theorem}
+
+\begin{proof}
+The bound is Proposition~\ref{prop:ceiling}, and the two existence assertions
+are Theorem~\ref{thm:zero-one}.  If \(m=1\), the bound forces every maximum
+to have defect zero, and Lemma~\ref{lem:order-cone} gives complete coverage.
+If \(m\geq2\), the exact defect-one construction supplies an invariant
+minimum that is not closure-generated.  The simultaneous zero-defect
+construction shows that existence of a closure-generated optimum and failure
+of complete coverage coexist.
+\end{proof}
+
+\begin{proposition}[Identity boundary]
+\label{prop:identity}
+If \(\sigma=\mathrm{id}\), \(q=f\geq2\), then
+\(\tau_\sigma=S_{q-1}\), the surcharge is zero, and every invariant minimum
+is the full cyclic closure of an ordinary minimum.
+\end{proposition}
+
+\begin{proof}
+The strict middle-peak ordinary minimum from
+Proposition~\ref{prop:ordinary-substrate} is invariant under reversal, so the
+ordinary and invariant values agree.  Any invariant minimum is itself an
+ordinary minimum and equals its own cyclic closure.
+\end{proof}
+
+\section{Sharp potentials and support extension}
+\label{sec:extension}
+
+For a potential \(h:V(H)\to\mathbb R\), write
+\(I(h)=\{u\to v\in E(H):h(u)<h(v)\}\).
+
+\begin{lemma}[Antisymmetric potential completion]
+\label{lem:potential-completion}
+Let a finite digraph have a vertex involution \(j\), with arc anti-action
+\(\rho(u,v)=(j(v),j(u))\).  If \(P\) is a \(\rho\)-stable acyclic arc set,
+then an antisymmetric potential \(h\circ j=-h\) satisfies \(P\subseteq I(h)\).
+If \(P\) has maximum cardinality among stable acyclic arc sets, then
+\(P=I(h)\).
+\end{lemma}
+
+\begin{proof}
+Choose a strictly increasing topological rank \(t\) of \(P\) and put
+\(h(v)=t(v)-t(j(v))\).  Then \(h(j(v))=-h(v)\).  If \(u\to v\in P\),
+stability also gives \(j(v)\to j(u)\in P\), and
+\[
+ h(v)-h(u)=[t(v)-t(u)]+[t(j(u))-t(j(v))]>0.
+\]
+Thus \(P\subseteq I(h)\).  The set \(I(h)\) is acyclic because \(h\) strictly
+increases on it, and it is stable by antisymmetry.  Maximal cardinality now
+forces equality.
+\end{proof}
+
+\begin{proposition}[Sharp-core localization]
+\label{prop:sharp-core}
+In fixed-point-free type \(2^m\), every maximum stable predecessor DAG is
+\(I(h)\) for a sharp antisymmetric potential attaining \(B_m\).  Its
+restriction to any subset of moving blocks is maximum.  Moreover, if
+\(P_{ij}\) is its two-block restriction, then
+\[
+ \delta_H(P)\geq\sum_{i<j}\delta(P_{ij}).              \tag{7.1}
+\]
+\end{proposition}
+
+\begin{proof}
+Lemma~\ref{lem:potential-completion} gives \(P=I(h)\).  Theorem
+\ref{thm:premium} and (4.1) give \(|P|=B_m\).  Since (4.1) is the sum of
+disjoint sector bounds, equality forces saturation of every sector; summing
+the sectors supported on any chosen block subset gives its exact smaller
+bound.  Thus every restriction is maximum.  Finally, by
+Lemma~\ref{lem:bad-triangle}, defect counts bad oriented triangles.  The
+bad triangle cells supported on different unordered block pairs are disjoint
+(shared within-block digons have zero defect), and every global topological
+order restricts to one of each \(P_{ij}\).  Summing their local lower bounds
+proves (7.1).  Equality in (7.1) is not asserted.
+\end{proof}
+
+\begin{lemma}[Sharp dominant moving-block extension]
+\label{lem:dominant-extension}
+Let \(h\) be an antisymmetric potential on \(r\geq1\) moving blocks with
+\(|I(h)|=B_r\).  Put \(H_0=\max_v|h(v)|\), \(L=H_0+4\), and adjoin the
+block \(\{a,b\}\).  If \(\varepsilon_x\in\{-1,+1\}\) is the sign of an old
+letter in its block, preserve all old levels and set
+\[
+\begin{array}{rclrcl}
+ \widetilde h(ax)&=-L+\varepsilon_x+2,&
+ \widetilde h(xa)&=-L+\varepsilon_x-2,\\
+ \widetilde h(bx)&= L+\varepsilon_x+2,&
+ \widetilde h(xb)&= L+\varepsilon_x-2,\\
+ \widetilde h(ab)&=0,&\widetilde h(ba)&=0.
+\end{array}                                             \tag{7.2}
+\]
+Then \(\widetilde h\) is antisymmetric and
+\(|I(\widetilde h)|=B_{r+1}\).
+\end{lemma}
+
+\begin{proof}
+For instance \(j(ax)=\bar x b\) and
+\(\widetilde h(\bar x b)=L-\varepsilon_x-2=-\widetilde h(ax)\); the other
+cases are identical.  All new nonfixed levels have absolute value at least
+\(H_0+1\), so every new cross four-cycle contributes two arcs.  For a new/old
+block pair the two alternating directions have differences
+\[
+ (\zeta-\varepsilon)L-4,
+ \qquad \gamma-\delta+4\in\{2,4,6\};
+\]
+the first contributes two arcs and the second eight, attaining ten.  On a
+triangle with the new block, its cyclic levels have the form
+\[
+ p=\varepsilon L+\delta+2,
+ \quad q\in[-H_0,H_0],
+ \quad r=\varepsilon L+\gamma-2.
+\]
+If \(\varepsilon=-1\), then \(r<p<q\); if \(\varepsilon=+1\), then
+\(q<r<p\).  Exactly two cyclic arcs increase in either case, and the reverse
+orientation is identical.  Old sectors remain sharp, so all new sector
+bounds and hence \(B_{r+1}\) are attained.
+\end{proof}
+
+\begin{lemma}[Exact moving-block defect preservation]
+\label{lem:defect-extension}
+For \(P=I(h)\) and \(\widetilde P=I(\widetilde h)\) as in
+Lemma~\ref{lem:dominant-extension},
+\[
+ \delta_{A\cup\{a,b\}}(\widetilde P)=\delta_A(P).       \tag{7.3}
+\]
+\end{lemma}
+
+\begin{proof}
+Let \(\omega\in\Top(P)\).  Extend it by the seven bands
+\[
+ ba;\quad xa\ (x\in A);\quad ab;\quad ax\ (x\in A);\quad
+ \omega;\quad xb\ (x\in A);\quad bx\ (x\in A),         \tag{7.4}
+\]
+using any fixed old-letter order inside homogeneous bands.  Directly from
+(7.2), every selected new arc goes forward in (7.4): arcs from \(xa\) to
+\(ab,ay\), from \(ab\) to \(bx\), from \(ax\) to old vertices or \(xb\),
+from old vertices to \(yb\), and from \(xb\) to \(by\) all respect the band
+order; the possible reverse-band arcs have decreasing or tied potential.
+The new triangle restrictions are
+\[
+ \begin{aligned}
+ xa&<ab<bx, & ba&<ax<xb, & ya&<ax<xy,\\
+ xa&<ay<yx, & xy&<yb<bx, & yx&<xb<by.
+ \end{aligned}
+\]
+Thus every new digon scores one and every new triangle scores two, while old
+cells retain their score under \(\omega\).  Taking a maximizing \(\omega\)
+gives \(\delta(\widetilde P)\leq\delta(P)\).
+
+Conversely, for any alphabet inclusion \(A\subseteq A'\), restriction of a
+topological order of \(P'\) is topological for \(P=P'|_A\), and new cells
+score at most \(\beta_{|A'|}-\beta_{|A|}\).  Hence
+\[
+ \max s_{A'}\leq\max s_A+\beta_{|A'|}-\beta_{|A|},
+ \qquad \delta_{A'}(P')\geq\delta_A(P).
+\]
+Apply this to \(\widetilde P|_A=P\) to obtain the reverse inequality in
+(7.3).
+\end{proof}
+
+\section{Defect-spectrum monotonicity}
+\label{sec:monotonicity}
+
+Let \(\Dspec_{m,f}\) be the set of defects attained by maximum stable
+predecessor DAGs for type \(2^m1^f\).
+
+\begin{theorem}[Support-extension monotonicity]
+\label{thm:monotonicity}
+For every \(m\geq r\geq1\) and \(f\geq0\),
+\[
+ \Dspec_{r,0}\subseteq\Dspec_{m,f}.
+\]
+\end{theorem}
+
+\begin{proof}
+Fix \(d\in\Dspec_{r,0}\) and a maximum stable DAG \(P\) of defect \(d\).
+Lemma~\ref{lem:potential-completion} writes \(P=I(h)\); Proposition
+\ref{prop:sharp-core} says that \(h\) is sharp.  Lemma
+\ref{lem:dominant-extension} may therefore add one moving block, and Lemma
+\ref{lem:defect-extension} preserves the defect exactly.  Iteration gives a
+maximum of defect \(d\) at \((m,0)\).  Finally, iterate the canonical
+fixed-letter lift of Lemma~\ref{lem:fixed-letter} \(f\) times.  It also
+preserves maximality and defect exactly, proving the inclusion.
+\end{proof}
+
+\begin{corollary}[Five persistent attained defects]
+\label{cor:five-defects}
+For every \(m\geq3,f\geq0\),
+\[
+ \{0,1,2,3,4\}\subseteq\Dspec_{m,f}.
+\]
+\end{corollary}
+
+\begin{proof}
+The exact six-letter census established below gives
+\(\Dspec_{3,0}=\{0,1,2,3,4\}\).  Apply
+Theorem~\ref{thm:monotonicity} with \(r=3\).  Only the five existence
+statements are used here; the exhaustive upper-bound part of the census is not
+transported.
+\end{proof}
+
+\begin{remark}[Logical boundary]
+The theorem does not say that \(\Dspec_{m,f}\) equals the five displayed
+values, that its maximum is four, or that it is an interval.  It transports
+neither realization-cone facets nor adjacency, connectivity, extrema
+reachability, or Lipschitz properties.
+\end{remark}
+
+\section{Five explicit finite seeds and the computational boundary}
+\label{sec:seeds}
+
+At \(q=6\), \(\sigma=(01)(23)(45)\), the 150 Kautz words form 75
+two-element \(\rho\)-orbits in lexicographic order.  In this finite census, a
+\emph{labelled maximum mask} is the 75-bit incidence vector of a maximum
+\(\rho\)-stable acyclic predecessor-arc set; it has weight 43 and therefore
+selects 86 arcs.  A \emph{source triple} is the ordered triple of local
+four-letter pair-core states on block pairs \((01),(02),(12)\).  Each local
+state lies in a canonically ordered 36-element list, so indices
+\((i_{01},i_{02},i_{12})\) have radix-36 code
+\(36^2i_{01}+36i_{02}+i_{12}\).  A \emph{closure--centralizer work unit} is
+an equivalence class of labelled maximum masks whose transitive closures
+agree after relabelling by the full centralizer of \(\sigma\).  A
+\emph{mask key} is the zero-padded 19-digit hexadecimal encoding of the
+75-bit vector.  In the last table column, \emph{relations/covers} means the
+cardinalities of the transitive closure and transitive reduction,
+respectively.  The following deterministic certificates give one witness
+for each defect.
+
+\begin{center}
+\small
+\begin{tabular}{cclrr}
+\toprule
+defect & score & mask key & source triple & relations/covers\\
+\midrule
+0 & 95 & \texttt{06d87f4fef6017ea3d6} & 5961  & 334/40\\
+1 & 94 & \texttt{25d86fc9dfe7f1027e4} & 25902 & 332/42\\
+2 & 93 & \texttt{06dc074fcf67d3ea3f4} & 26734 & 350/38\\
+3 & 92 & \texttt{24dc67cbdfecf3823e2} & 12907 & 334/56\\
+4 & 91 & \texttt{25d82fcdcffff2007f0} & 38610 & 362/48\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The associated optimal predecessor orders and their bad cells are:
+\begin{enumerate}[label={\(d=\arabic*:\)},start=0,leftmargin=*]
+\item {\ttfamily\footnotesize 01 03 04 31 14 41 10 12 13 15 53 34 42 23 43 30 32 25\\
+35 45 52 20 24 54 40 05 50 02 21 51}\par No bad cell.
+\item {\ttfamily\footnotesize 01 04 31 42 52 21 14 24 41 10 12 13 15 23 25 45 54 40\\
+43 30 32 20 05 50 02 03 53 34 35 51}\par Bad cell \(T^-_{235}\).
+\item {\ttfamily\footnotesize 01 31 12 52 24 41 42 21 15 23 25 51 10 13 14 32 20 45\\
+50 04 54 40 03 05 43 35 53 30 02 34}\par Bad cells \(T^-_{234},T^-_{235}\).
+\item {\ttfamily\footnotesize 12 35 40 02 52 20 01 05 21 23 25 51 10 14 45 50 03 04\\
+53 32 24 54 41 13 43 30 31 15 34 42}\par Bad cells
+\(T^+_{015},T^-_{123},T^+_{245}\).
+\item {\ttfamily\footnotesize 12 50 02 20 24 40 01 03 04 32 34 41 10 05 42 23 25 45\\
+54 43 35 51 52 21 13 15 53 30 31 14}\par Bad cells
+\(T^-_{012},T^-_{013},T^-_{145},T^-_{234}\).
+\end{enumerate}
+Each order respects the complete canonical precedence relation encoded by
+its mask, and Lemma~\ref{lem:bad-triangle} gives the displayed defect.
+The complete transitive closures, reductions, centralizer transports, opposed
+dynamic-programming certificates, and hashes are stored in a machine-readable
+certificate bundle.
+
+The existence list alone does not prove that no larger defect occurs.  The
+population is reconstructed independently of the stored labels and mask table
+from the combinatorial definition, using the frozen quotient-native Route B
+kernel.  This is a label-independent replay, not a second implementation of
+that kernel.  The portable enumerator first derives
+the 36 local four-letter states, forms all \(36^3=46{,}656\) source triples,
+quotients them into 987 centralizer orbits, and visits exactly 54,078 nodes in
+the complete leaf-canonical triangle search.  It obtains 1,759 canonical
+representative masks and expands them under the 48-element centralizer to
+exactly 83,736 distinct labelled maximum masks.  Only after this enumeration
+does it open the tracked table and verify exact set equality and digest.
+
+The separate portable exhaustive optimization then covers all 83,736
+labelled maximum masks and all 1,759 closure--centralizer work units.  For
+every work unit it checks
+opposed prefix and suffix dynamic-programming tables state by state against
+their Bellman recurrences, verifies that both routes give the same optimum,
+and checks a concrete optimal topological order.  Its
+labelled-mask multiplicities for defects \(0,\ldots,4\) are
+\[
+ (20976,26640,19896,14208,2016),
+\]
+and its work-unit multiplicities are
+\[
+ (445,555,420,297,42).
+\]
+That computation proves the upper boundary only at \((m,f)=(3,0)\).  The five
+certificates make the existence witnesses portable; they are not a
+replacement for the exhaustive census.
+
+\section{Exact obstruction clutters and lower certificates}
+\label{sec:obstruction-clutter}
+
+For distinct letters \(a<b<c\), let \(T^+_{abc}\) and \(T^-_{abc}\) denote
+the two oriented triangle cells, with cyclic comparisons
+\[
+ \begin{array}{lll}
+ T^+_{abc}:&ab<bc,&bc<ca,\quad ca<ab,\\
+ T^-_{abc}:&ac<cb,&cb<ba,\quad ba<ac.
+ \end{array}
+\]
+A total order makes either one or two comparisons in each cell true; the cell
+is bad in the former case.  Let \(\mathcal T_q\) be the set of all these
+oriented triangle cells.  In this section formula (3.1) defines
+\(\delta_H(P)\) for any acyclic predecessor arc set, not necessarily a
+maximum one.  For such a set \(P\) and
+\(S\subseteq\mathcal T_q\), write \(\operatorname{Good}_P(S)\) when some
+order in \(\Top(P)\) makes every cell of \(S\) good.  Define the obstruction
+clutter
+\[
+ \mathcal H(P)=\min_{\subseteq}
+ \{S\subseteq\mathcal T_q:\operatorname{Good}_P(S)\text{ fails}\},
+                                                               \tag{10.1}
+\]
+where only inclusion-minimal members are retained.  These are cyclic-order
+constraints in the sense of \cite{GalilMegiddo1977,Opatrny1979}; their
+incidence vectors lie naturally in the linear-ordering-polytope setting of
+\cite{GroetschelJuengerReinelt1985}.  The following identity is elementary
+and does not import a result from those papers.
+
+\begin{theorem}[Exact obstruction-clutter formula]
+\label{thm:obstruction-clutter}
+For every acyclic predecessor arc set \(P\),
+\[
+ \delta_H(P)=\tau(\mathcal H(P)),                         \tag{10.2}
+\]
+where the right-hand side is the transversal number of the clutter.
+\end{theorem}
+
+\begin{proof}
+For \(\omega\in\Top(P)\), let \(B(\omega)\) be its set of bad oriented
+triangle cells.  This set meets every member of \(\mathcal H(P)\), since a
+disjoint obstruction would be good under \(\omega\).  Lemma~\ref{lem:bad-triangle}
+therefore gives \(\delta_H(P)\geq\tau(\mathcal H(P))\).
+
+Conversely, let \(B\) be a minimum transversal.  The set
+\(\mathcal T_q\setminus B\) contains no member of \(\mathcal H(P)\).  If it
+were infeasible, finiteness would give an inclusion-minimal infeasible subset,
+contradicting that assertion.  Hence some \(\omega\in\Top(P)\) makes every
+cell outside \(B\) good, so \(B(\omega)\subseteq B\).  The bad-triangle
+formula yields the reverse inequality.
+\end{proof}
+
+Let
+\[
+ F(P)=\{T\in\mathcal T_q:\operatorname{Good}_P(\{T\})\text{ fails}\}.
+\]
+On \(\mathcal T_q\setminus F(P)\), form the incompatibility graph \(G(P)\)
+by joining \(T\) and \(U\) when
+\(\operatorname{Good}_P(\{T,U\})\) fails.
+
+\begin{corollary}[Forced cells plus matching]
+\label{cor:forced-matching}
+For every acyclic \(P\),
+\[
+ \delta_H(P)\geq |F(P)|+\nu(G(P)).                       \tag{10.3}
+\]
+\end{corollary}
+
+\begin{proof}
+The singleton members of \(\mathcal H(P)\) are precisely the forced cells.
+After deleting them, every edge of \(G(P)\) is a two-element member of the
+clutter.  A matching gives pairwise disjoint such obstructions, so every
+transversal contains all forced cells and at least one endpoint of each
+matching edge.  Apply Theorem~\ref{thm:obstruction-clutter}.
+\end{proof}
+
+The lower certificate (10.3) is not always exact.  The following small
+control prevents higher-rank obstructions from being silently discarded.
+
+\begin{proposition}[A rank-three obstruction]
+\label{prop:rank-three-obstruction}
+On four letters, let \(P\) be the partial order generated by
+\[
+\begin{array}{lllll}
+01<13,&03<20,&03<32,&10<31,&12<01,\\
+20<23,&21<32,&31<20,&32<02,&32<30.
+\end{array}                                             \tag{10.4}
+\]
+Then \(F(P)=\varnothing\), \(G(P)\) has no edge, but
+\(\delta_H(P)=1\).  Its unique minimal obstruction is
+\[
+ \{T^+_{012},T^-_{023},T^-_{123}\}.
+\]
+Thus equality in (10.3) is false in general.
+\end{proposition}
+
+\begin{proof}
+Direct enumeration gives 99,000 linear extensions of \(P\), 162 with exactly
+one bad cell, and 176 distinct bad-cell sets.  It verifies that every singleton
+and every pair of cells is simultaneously good, while every proper subset of
+the displayed triple is feasible.  The triple itself has a short certificate:
+if all three cells were good, the base relations leave only compatible cyclic
+chains containing respectively
+\[
+ 20<01,\qquad32<20,\qquad13<32.
+\]
+Together with \(01<13\), these give
+\(20<01<13<32<20\), a contradiction.  Hence the displayed triple is the
+unique minimal obstruction and Theorem~\ref{thm:obstruction-clutter} gives
+\(\delta_H(P)=1\).
+\end{proof}
+
+\section{A six-letter four-defect obstruction}
+\label{sec:obstruction}
+
+We now apply the forced-cell-plus-matching certificate to a six-letter core.
+
+\begin{lemma}[Ten-relation four-defect obstruction]
+\label{lem:ten-relation-obstruction}
+Every total order containing the precedence relations
+\[
+\begin{array}{lll}
+02<10<21, & 03<10<31,\\
+40<54<15, & 41<05,\\
+24<32<53, & 25<43
+\end{array}                                             \tag{11.1}
+\]
+has at least four bad cells among
+\[
+T^-_{012},T^-_{013},T^-_{045},T^-_{145},T^-_{234},T^-_{235}.
+\]
+\end{lemma}
+
+\begin{proof}
+The chain \(02<10<21\) gives the truth pattern \((1,0,0)\) in
+\(T^-_{012}\), so this cell is bad.  Likewise \(03<10<31\) makes
+\(T^-_{013}\) bad.
+
+Suppose that both \(T^-_{045}\) and \(T^-_{145}\) were good.  Since
+\(40<54\), goodness of the first cell would force \(40<05<54\).  Since
+\(54<15\), goodness of the second would force \(54<41<15\).  Hence
+\(05<54<41\), contrary to \(41<05\).  At least one of these two cells is
+therefore bad.
+
+Similarly, goodness of \(T^-_{234}\) would force \(24<43<32\), while
+goodness of \(T^-_{235}\) would force \(32<25<53\).  Together they imply
+\(43<32<25\), contrary to \(25<43\).  At least one of the last two cells is
+bad.  The three disjoint contributions are consequently \(2+1+1=4\).
+Equivalently, if \(P\) is the partial order generated by (11.1), the first
+two cells lie in \(F(P)\), while
+\(\{T^-_{045},T^-_{145}\}\) and
+\(\{T^-_{234},T^-_{235}\}\) are disjoint edges of \(G(P)\);
+Corollary~\ref{cor:forced-matching} gives the same lower bound.
+\end{proof}
+
+The argument is invariant under relabelling and remains valid after adding
+vertices or further precedence relations, provided the displayed core is
+retained.  It does not assert that the core occurs for every involution or in
+every extremal order cone.
+
+\begin{proposition}[Exact occurrence in the six-letter census]
+\label{prop:obstruction-occurrence}
+Let \(\sigma=(01)(23)(45)\).  Among the 1,759 closure-centralizer classes in
+the six-letter census, exactly 24 contain an image of the core (11.1) under
+\(C_{S_6}(\sigma)\).  Each of these 24 classes has defect four, each contains
+a unique centralizer image of the core, and none of the remaining 1,735
+classes contains such an image.  The 24 classes account for 1,152 labelled
+masks.
+\end{proposition}
+
+\begin{proof}[Computer verification]
+A separate checker reconstructs the 48-element centralizer, decodes every
+closure, tests all centralizer images of (11.1), and independently checks all
+1,152 labelled members against their canonical representatives.  It records
+24 unique hits, no hit outside the selected classes, and no failed transport.
+The commands and certificate boundary are given in
+Appendix~\ref{app:reproducibility}.
+\end{proof}
+
+\begin{remark}[Minimality boundary]
+Within this fixed six-cell decomposition, deleting any one of the ten
+relations lowers the forced minimum in its component, so (11.1) is
+inclusion-minimal for the displayed \(2+1+1\) proof.  It is not claimed to be
+a globally smallest classifier of the 24 finite classes.
+\end{remark}
+
+\section{Finite diagnostics and open mechanism questions}
+\label{sec:diagnostics}
+
+We first fix the geometric terminology used in this section.  For a fixed
+involution \(\sigma\), let
+\[
+ V^-_\sigma=\{h:A_q\to\mathbb R:h(jv)=-h(v)\},\qquad
+ \ell_{xyz}(h)=h(yz)-h(xy).
+\]
+The forms are constant on the \(\rho\)-orbits of words.  After removing the
+structural zero forms and identifying proportional forms, their kernels are
+the \emph{primitive walls}.  A source mask \(M\) is \emph{sharp} when it
+selects the maximum possible number of positive nonzero \(\rho\)-orbits; its
+relative open realization cone is
+\[
+ K(M)=\{h\in V^-_\sigma:\ell_o(h)>0\ (o\in M),\quad
+                  \ell_o(h)<0\ (o\notin M\cup Z)\},
+\]
+where \(Z\) is the structural-zero set.  A \emph{chamber} is the positive
+projectivization \(K(M)/\mathbb R_{>0}\) of a nonempty sharp cone.
+
+Two labelled chambers are \emph{raw sharp facet neighbours} when the
+topological closures of their cones share a relative codimension-one face.
+The certificate used here supplies exact interior potentials on both sides
+whose joining segment meets exactly one primitive wall and no other wall.
+The full centralizer \(G=C_{S_q}(\sigma)\) relabels masks and cones; its
+vertex quotient has the chamber orbits \(GM\), while raw edges retain their
+labelled endpoints and crossed wall.  At \(q=6\), \(G\cong C_2\wr S_3\) has
+order 48.  A \emph{candidate flip} switches the complete sign class of one
+of the 18 primitive walls having one form in each orientation.  It becomes a
+realized neighbour only when the flipped sharp mask has a certified nonempty
+cone and the exact one-wall segment test passes.
+
+Two bounded diagnostics do not enter the preceding proofs.  At \(m=2\), the
+projectivized sharp realization-cone facet graph has 36 chambers; its full
+centralizer quotient is a connected five-vertex graph and defect is
+1-Lipschitz on its sharp facet edges.  This behavior does not persist at
+\(m=3\): two certified sharp facet adjacencies have endpoint defects
+\((0,3)\) and \((4,1)\).  Thus defect is not 1-Lipschitz, and the maximum
+facet jump is at least three.  A bounded panel of 90 candidate flips finds 23
+realized neighbours, with jump histogram
+\[
+0:13,\qquad1:4,\qquad2:4,\qquad3:2.
+\]
+This panel is not the global facet graph and does not determine connectivity
+or the maximum jump.  The obstruction of Section~\ref{sec:obstruction}
+explains 24 of the 42 defect-four symmetry classes at \((3,0)\); it does not
+classify the other 18 or provide an all-parameter defect formula.
+
+\appendix
+\section{Reproducibility and artifact boundary}
+\label{app:reproducibility}
+
+The finite seed certificates are reproduced and independently checked by
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_five\_defect\_witnesses.py\par
+python -B -O companion/verify\_five\_defect\_witnesses.py
+\end{quote}
+These five certificates prove attainment.  The reverse inclusion
+\(\Dspec_{3,0}\subseteq\{0,1,2,3,4\}\) comes instead from the complete
+six-letter verification described in Section~\ref{sec:seeds}.  Population
+completeness is first reconstructed from the 36 local states and all 46,656
+source triples by
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_population.py\par
+python -B -O companion/verify\_population.py
+\end{quote}
+The checker enumerates 987 source orbits and 1,759 canonical representative
+masks, expands them to 83,736 labelled masks, and consults the tracked mask
+rows only for a final exact-set comparison.  It imports neither Route A nor a
+stored population as an enumeration oracle; it deliberately reuses the frozen
+quotient-native Route B kernel rather than claiming a second implementation.
+
+The portable
+bundle contains opposed dynamic-programming tables for all 1,759
+closure-centralizer classes.  The following standard-library checker
+reconstructs one authenticated canonical closure per class, expands the 1,759
+representative mask orbits under all 48 centralizer actions, verifies the
+mask-to-class assignment of every one of the 83,736 tracked masks, checks all
+3,518 tables against their Bellman recurrences, checks route agreement and
+explicit optimal orders, and derives the displayed spectrum:
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_bellman\_bundle.py\par
+python -B -O companion/verify\_bellman\_bundle.py
+\end{quote}
+The public replay uses no historical SQLite database.
+
+The exact occurrence statement in Proposition~\ref{prop:obstruction-occurrence}
+is reproduced by
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_ten\_relation\_core.py\par
+python -B -O companion/verify\_ten\_relation\_core.py
+\end{quote}
+The checker reconstructs each canonical closure directly from the tracked
+75-bit source masks and tests the core on all 1,759 work identities.  It
+discovers 24 classes and all their
+1,152 labelled members.  The human \(2+1+1=4\) lower bound and two directly
+checked score-91 topological orders per discovered class give matching lower
+and upper bounds.
+
+The bounded facet diagnostic in Section~\ref{sec:diagnostics} is reproduced by
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_facet\_counterexample.py\par
+python -B -O companion/verify\_facet\_counterexample.py
+\end{quote}
+These commands certify the two displayed sharp adjacencies and the stated
+90-flip panel only.  They do not construct the full six-letter facet graph.
+The exact file manifest, prerequisites, expected outputs, PDF build, and
+clean-clone procedure are given in \texttt{REPRODUCE.md} at repository root.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

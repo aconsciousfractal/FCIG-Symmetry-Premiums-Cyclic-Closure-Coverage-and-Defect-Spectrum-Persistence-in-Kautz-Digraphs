@@ -1,0 +1,122 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-replay:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - name: Install hash-locked environment
+        run: python -m pip install --require-hashes -r requirements.lock
+      - name: Normal and optimized exact replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHON_ABSOLUTE=$(python -I -S -c 'import sys; print(sys.executable)')
+          GIT_ABSOLUTE=$(command -v git)
+          "$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py \
+            --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
+          "$PYTHON_ABSOLUTE" -I -S -B -O scripts/runtime_bootstrap.py \
+            --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
+      - name: Focused hostile suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHON_ABSOLUTE=$(python -I -S -c 'import sys; print(sys.executable)')
+          GIT_ABSOLUTE=$(command -v git)
+          "$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py \
+            --git-executable "$GIT_ABSOLUTE" --module pytest -- \
+            -q -p no:cacheprovider \
+            --basetemp "${{ runner.temp }}/kautz-symmetry-${{ matrix.python-version }}" \
+            tests/test_kautz_symmetry.py tests/test_release_assurance.py
+      - name: Verification leaves checkout unchanged
+        run: git diff --exit-code -- .
+
+  paper-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - name: Install inspection and TeX environments
+        run: |
+          python -m pip install --require-hashes -r requirements.lock
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk poppler-utils texlive-fonts-extra texlive-latex-extra \
+            texlive-luatex texlive-pictures texlive-science
+      - name: Verify committed release
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHON_ABSOLUTE=$(python -I -S -c 'import sys; print(sys.executable)')
+          GIT_ABSOLUTE=$(command -v git)
+          "$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py \
+            --git-executable "$GIT_ABSOLUTE" --target scripts/check_release.py
+      - name: Build twice and compare bytes and semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          pdf_name=Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs.pdf
+          log_name=${pdf_name%.pdf}.log
+          first=$(mktemp -d)
+          second=$(mktemp -d)
+          cp -a paper/. "$first/"
+          cp -a paper/. "$second/"
+          build() {
+            local directory=$1
+            (
+              cd "$directory"
+              export SOURCE_DATE_EPOCH=1788307200
+              export FORCE_SOURCE_DATE=1
+              latexmk -silent -lualatex -interaction=nonstopmode \
+                -halt-on-error -file-line-error main.tex
+            )
+          }
+          build "$first"
+          build "$second"
+          cmp "$first/$pdf_name" "$second/$pdf_name"
+          if grep -Eiq 'undefined references|Citation .* undefined|Reference .* undefined|Overfull|Emergency stop|Fatal error' "$second/$log_name"; then
+            exit 1
+          fi
+          COMMITTED_PDF="$GITHUB_WORKSPACE/paper/$pdf_name" \
+          GENERATED_PDF="$second/$pdf_name" python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+          from pypdf import PdfReader
+
+          def extract(path: Path) -> tuple[int, str]:
+              reader = PdfReader(str(path), strict=True)
+              text = "\n".join(page.extract_text() or "" for page in reader.pages)
+              return len(reader.pages), re.sub(r"\s+", " ", text).strip()
+
+          if extract(Path(os.environ["COMMITTED_PDF"])) != extract(Path(os.environ["GENERATED_PDF"])):
+              raise SystemExit("committed/generated PDF semantic drift")
+          PY
+      - name: Paper build leaves checkout unchanged
+        run: git diff --exit-code -- .
