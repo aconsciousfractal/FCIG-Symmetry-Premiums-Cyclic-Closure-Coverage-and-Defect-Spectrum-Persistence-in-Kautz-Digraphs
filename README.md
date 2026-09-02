@@ -43,8 +43,9 @@ python -I -S -B -O scripts/runtime_bootstrap.py --git-executable git --target sc
 The verifier checks the manifest and release surface, independently rebuilds
 the finite population, validates all 3,518 opposed Bellman tables and all
 83,736 mask-to-class assignments, verifies the five spectrum witnesses, finds
-the 24 ten-relation-core classes, and reconstructs the exact facet
-counterexamples. It writes no scientific result file.
+the unique four-letter rank-three obstruction and the 24 ten-relation-core
+classes, and reconstructs the exact facet counterexamples. It writes no
+scientific result file.
 
 The committed paper is
 `paper/Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs.pdf`.

@@ -39,6 +39,7 @@ REQUIRED_PATHS = {
     "companion/verify_facet_counterexample.py",
     "companion/verify_five_defect_witnesses.py",
     "companion/verify_population.py",
+    "companion/verify_rank_three_obstruction.py",
     "companion/verify_ten_relation_core.py",
     "docs/PUBLIC_CLAIM_BOUNDARY.md",
     "docs/REPRODUCIBILITY_BOUNDARY.md",

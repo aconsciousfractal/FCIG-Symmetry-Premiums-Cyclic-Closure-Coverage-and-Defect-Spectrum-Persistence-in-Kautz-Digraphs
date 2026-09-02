@@ -14,6 +14,7 @@ import population_kernel as kernel  # noqa: E402
 import verify_bellman_bundle as bellman  # noqa: E402
 import verify_facet_counterexample as facet  # noqa: E402
 import verify_five_defect_witnesses as witnesses  # noqa: E402
+import verify_rank_three_obstruction as rank_three  # noqa: E402
 import verify_ten_relation_core as core  # noqa: E402
 
 
@@ -58,3 +59,14 @@ def test_human_ten_relation_bound() -> None:
     lower, components = core.verify_human_core()
     assert lower == 4
     assert components == (2, 1, 1)
+
+
+def test_rank_three_obstruction_and_relation_mutation() -> None:
+    result = rank_three.audit()
+    assert result["linear_extensions"] == 99_000
+    assert result["distinct_bad_sets"] == 176
+    assert result["minimum_bad_cells"] == 1
+    assert result["forced_cells"] == result["incompatibility_edges"] == 0
+    assert result["minimal_obstruction"] == ["T:+:012", "T:-:023", "T:-:123"]
+    with pytest.raises(ValueError):
+        rank_three.audit(rank_three.RELATIONS[:-1])

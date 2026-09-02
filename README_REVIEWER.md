@@ -23,8 +23,9 @@ python -I -S -B scripts/runtime_bootstrap.py --git-executable git --module pytes
 ```
 
 The suite attacks corrupted witnesses, wrong facet endpoints, altered
-histograms, undeclared files, LFS pointers, private-workspace residue, unsafe
-PDF content, and Git/object-store redirection.
+histograms and rank-three relations, undeclared files, LFS pointers, absolute
+workspace paths, staging residue, unsafe PDF content, and Git/object-store
+redirection.
 
 ## 3. Mathematical spine
 
@@ -48,6 +49,8 @@ fact that the facet panel is bounded rather than global.
 - `verify_bellman_bundle.py` expands all classes and validates every one of the
   83,736 membership assignments plus all opposed dynamic-programming tables.
 - `verify_five_defect_witnesses.py` proves the five finite attainments.
+- `verify_rank_three_obstruction.py` enumerates the 99,000 four-letter linear
+  extensions and recovers the unique minimal rank-three obstruction.
 - `verify_ten_relation_core.py` discovers the 24 classes without reading a
   stored defect-label oracle, then verifies exact defect four.
 - `verify_facet_counterexample.py` rebuilds the 75 forms, 54 walls, two exact

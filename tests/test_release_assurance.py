@@ -35,14 +35,22 @@ def test_manifest_path_boundary(path: str, expected: bool) -> None:
     assert check_manifest.safe_relative(path) is expected
 
 
-def test_lfs_pointer_and_private_marker_rejected() -> None:
+def test_lfs_pointer_and_absolute_paths_rejected() -> None:
     with pytest.raises(AssertionError):
         check_release.scan_private(
             "mutation", b"version https://git-lfs.github.com/spec/v1\n",
         )
-    private = ("P" + "63").encode("ascii")
+    separator = chr(92)
+    windows_path = (
+        "C" + ":" + separator + "private-workspace" + separator + "artifact"
+    ).encode("ascii")
     with pytest.raises(AssertionError):
-        check_release.scan_private("mutation", private)
+        check_release.scan_private("mutation", windows_path)
+    unix_path = ("/" + "root" + "/private-workspace/artifact").encode("ascii")
+    with pytest.raises(AssertionError):
+        check_release.scan_private("mutation", unix_path)
+    with pytest.raises(AssertionError):
+        check_release.check_hygiene({"reports/staging.txt"})
 
 
 def test_active_pdf_dictionary_rejected() -> None:

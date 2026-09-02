@@ -34,15 +34,25 @@ TEXT_SUFFIXES = {
     ".py", ".md", ".tex", ".bib", ".cff", ".txt", ".yml", ".yaml",
     ".json", ".lock", "",
 }
-PRIVATE_MARKERS = (
-    "P" + "63",
-    "M" + "R3",
-    "D" + "S1",
-    "K4_U_" + "RS",
-    "paper_" + "projects",
-    "G:" + "\\Repositories\\HAN",
-    "/root/" + "papp",
+ABSOLUTE_PATH_PATTERNS = (
+    (
+        "Windows absolute path",
+        re.compile(rb"(?i)(?<![A-Za-z0-9_.-])[A-Z]:[\\/]"),
+    ),
+    (
+        "user/root absolute path",
+        re.compile(rb"(?i)(?<![A-Za-z0-9_.-])/(?:home|root|Users)/"),
+    ),
+    (
+        "UNC absolute path",
+        re.compile(rb"(?<![\\/:])(?:\\\\|//)[A-Za-z0-9._-]+[\\/]"),
+    ),
 )
+FORBIDDEN_STAGING_COMPONENTS = {
+    ".pytest_cache", "__pycache__", "receipts", "registry", "reports",
+    "temp", "tmp",
+}
+FORBIDDEN_STAGING_SUFFIXES = (".bak", ".log", ".partial", ".tmp")
 LFS_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 RELEASE_RE = re.compile(r"^([0-9a-f]{64})  ([^\x00-\x1f]+)$")
 
@@ -71,15 +81,23 @@ def parse_release() -> list[tuple[str, str]]:
 
 
 def scan_private(label: str, payload: bytes) -> None:
-    lowered = payload.lower()
-    for marker in PRIVATE_MARKERS:
-        need(marker.lower().encode("utf-8") not in lowered, f"private marker in {label}: {marker}")
+    for description, pattern in ABSOLUTE_PATH_PATTERNS:
+        need(pattern.search(payload) is None, f"{description} in {label}")
     need(LFS_PREFIX not in payload[:256], f"LFS pointer in {label}")
 
 
 def check_hygiene(files: set[str]) -> dict[str, int]:
     text_files = 0
     for relative in sorted(files):
+        components = set(relative.split("/"))
+        need(
+            not components & FORBIDDEN_STAGING_COMPONENTS,
+            f"staging path: {relative}",
+        )
+        need(
+            not relative.lower().endswith(FORBIDDEN_STAGING_SUFFIXES),
+            f"staging suffix: {relative}",
+        )
         path = ROOT / relative
         payload = path.read_bytes()
         need(not payload.startswith(LFS_PREFIX), f"LFS pointer: {relative}")
@@ -176,7 +194,6 @@ def check_pdf() -> dict[str, object]:
     need(payload.startswith(b"%PDF-"), "missing PDF header")
     need(payload.rstrip().endswith(b"%%EOF"), "missing terminal PDF EOF")
     need(payload.count(b"%%EOF") == 1, "multiple PDF EOF markers")
-    scan_private(PDF_NAME, payload)
     reader = PdfReader(str(path), strict=True)
     need(not reader.is_encrypted, "encrypted PDF")
     need(len(reader.pages) >= 10, "unexpectedly short manuscript")
@@ -197,6 +214,8 @@ def check_pdf() -> dict[str, object]:
         height = float(page.mediabox.height)
         need(abs(width - 595.276) < 1.0 and abs(height - 841.890) < 1.0, f"non-A4 page {number}")
     metadata = reader.metadata or {}
+    metadata_text = "\n".join(f"{key}={value}" for key, value in metadata.items())
+    scan_private(f"{PDF_NAME} metadata", metadata_text.encode("utf-8"))
     need(str(metadata.get("/Title", "")) == PDF_TITLE, "PDF title metadata")
     need(str(metadata.get("/Author", "")) == "Oleksiy Babanskyy", "PDF author metadata")
     keywords = str(metadata.get("/Keywords", ""))

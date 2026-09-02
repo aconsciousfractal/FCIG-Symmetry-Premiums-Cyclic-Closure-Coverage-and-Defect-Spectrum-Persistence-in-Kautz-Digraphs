@@ -12,6 +12,8 @@
   defect histograms
   `445,555,420,297,42` and `20,976,26,640,19,896,14,208,2,016`;
 - one exact finite witness for each defect `0,1,2,3,4`;
+- all 99,000 linear extensions of the four-letter rank-three example, its 176
+  attained bad-cell sets, and its unique minimal three-cell obstruction;
 - all 24 ten-relation-core classes and all 1,152 labelled members;
 - the two exact jump-three facet counterexamples and the 90-flip bounded panel.
 

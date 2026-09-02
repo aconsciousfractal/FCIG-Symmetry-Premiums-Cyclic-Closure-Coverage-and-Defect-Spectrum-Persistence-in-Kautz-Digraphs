@@ -91,7 +91,7 @@ letter involution.  Three questions then separate naturally: what is the
 exact cost of invariance, when are all invariant optima generated from
 ordinary optima by cyclic closure, and which losses occur inside the
 topological-order cone of an invariant optimum?  Here the cyclic closure of
-a set (F) means \(\cl_{\Theta}(F)=F\cup\Theta_\sigma(F)\).
+a set \(F\) means \(\cl_{\Theta}(F)=F\cup\Theta_\sigma(F)\).
 
 Our main contributions are as follows.
 \begin{enumerate}[leftmargin=*]
@@ -289,34 +289,79 @@ If \(\sigma\) has type \(2^m\), \(m\geq1\), on \(q=2m\) letters, then
 By Lemma~\ref{lem:potential-completion} below, a maximum stable predecessor
 DAG is \(I(h)=\{u\to v:h(u)<h(v)\}\) for an antisymmetric potential
 \(h\circ j=-h\).  The fixed predecessor vertices \(a_ib_i,b_ia_i\) have
-level zero.  The remaining arcs split into disjoint sectors.  Cross arcs
-between a free pair and fixed vertices form \(2m(m-1)\) four-cycles, each
-contributing at most two, for \(4m(m-1)\).  Each unordered pair of blocks
-has four digons and two four-cycles among the nonfixed vertices, contributing
-at most \(4+2\cdot3=10\).  Each unordered triple of blocks has sixteen
-directed triangles, each contributing at most two, for \(32\).  Hence
+level zero.  Classify an arc \(xy\to yz\) by the set of transposition blocks
+meeting \(\{x,y,z\}\).  Its block support has size one, two, or three, and
+the following table is an exhaustive disjoint partition.  The counts and
+bounds are for each fixed choice of block support.
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}cXcc@{}}
+\toprule
+support & pieces & number & bound per piece\\
+\midrule
+one block & within-block digon & 1 & 0\\
+two blocks & fixed--free two-arc pairs & 8 & 1\\
+           & cross-block digons & 4 & 1\\
+           & non-digon directed four-cycles & 2 & 3\\
+three blocks & directed triangles & 16 & 2\\
+\bottomrule
+\end{tabularx}
+\end{center}
+Indeed, in one block both predecessor vertices are fixed and tied at zero.
+For two blocks there are eight nonfixed predecessor vertices; each supports
+one incoming arc from a fixed vertex and one outgoing arc to a fixed vertex,
+so at most one of the two can increase.  The remaining arcs are exactly four
+digons and two directed four-cycles.  For three blocks they are exactly the
+two oriented triangles on each of the eight choices of one letter per block.
+An increasing potential selects at most one arc of a digon, three of a
+directed four-cycle, and two of a directed triangle.  Therefore
 \[
- |I(h)|\leq B_m:=4m(m-1)+10\binom m2+32\binom m3
+ |I(h)|\leq B_m:=18\binom m2+32\binom m3
+ =4m(m-1)+10\binom m2+32\binom m3
  =\frac{m(m-1)(16m-5)}3.                           \tag{4.1}
 \]
 
 This bound is sharp.  Put \(\lambda_i=4^{m-1-i}\), set
 \(c_{ij}=2\lambda_j\) for \(i<j\), \(c_{ji}=-c_{ij}\), and identify
-\(i^-=a_i,i^+=b_i\).  Define
+\(i^-=a_i,i^+=b_i\).  For \(i\ne j\) define
 \[
  h(i^\varepsilon j^\delta)
  =\varepsilon\lambda_i+\delta\lambda_j+c_{ij}
  \qquad(\varepsilon,\delta\in\{-1,+1\}).             \tag{4.2}
 \]
-It is antisymmetric.  If \(i<j\), its sign is \(\varepsilon\), so every
-cross four-cycle contributes two.  In a two-block sector the two alternating
-directions have differences
+Complete the definition by
+\(h(i^-i^+)=h(i^+i^-)=0\).  Since
+\(j(i^\varepsilon j^\delta)=j^{-\delta}i^{-\varepsilon}\) and
+\(c_{ji}=-c_{ij}\), this is antisymmetric.  If \(i<j\), the sign of
+\(h(i^\varepsilon j^\delta)\) is \(\varepsilon\), since
+\(\lambda_i\geq4\lambda_j\).  Thus all eight fixed--free pairs in that
+two-block sector attain their bound.
+
+Fix \(i<j\) and let
+\(\varepsilon,\delta,\eta,\zeta\in\{-1,+1\}\).  On the two alternating
+arc families
+\[
+ i^\varepsilon j^\delta\to j^\delta i^\eta,
+ \qquad
+ j^\delta i^\varepsilon\to i^\varepsilon j^\zeta,
+\]
+the potential differences are respectively
 \[
  (\eta-\varepsilon)\lambda_i-4\lambda_j,
  \qquad (\zeta-\delta)\lambda_j+4\lambda_j;
 \]
-exactly \(2+8=10\) arcs increase.  For \(i<j<k\), the three cyclic
-differences are
+the first is positive exactly for
+\((\varepsilon,\eta)=(-1,+1)\), giving two arcs as \(\delta\) varies,
+while the second belongs to \(\{2\lambda_j,4\lambda_j,6\lambda_j\}\) and
+is positive for all eight choices.  Hence the four digons and two
+four-cycles contribute exactly \(2+8=10\).
+
+Finally fix \(i<j<k\) and
+\(\varepsilon,\delta,\gamma\in\{-1,+1\}\).  Around the directed triangle
+\[
+ i^\varepsilon j^\delta\to j^\delta k^\gamma
+ \to k^\gamma i^\varepsilon\to i^\varepsilon j^\delta
+\]
+the three potential differences are
 \[
  -\varepsilon\lambda_i-2\lambda_j+(\gamma+2)\lambda_k,
  \quad \varepsilon\lambda_i-\delta\lambda_j-4\lambda_k,
@@ -324,7 +369,10 @@ differences are
 \]
 Their signs are \((-\varepsilon,\varepsilon,+)\), since
 \(\lambda_i\geq4\lambda_j\geq16\lambda_k\); exactly two arcs increase in
-each directed triangle.  Thus every sector bound is attained.
+each of these eight triangles.  Antisymmetry makes \(I(h)\) \(\rho\)-stable;
+the other eight oriented triangles are their \(\rho\)-images as the signs
+vary, and have the same count.  Thus every row
+of the exhaustive sector table is attained.
 
 Since \(H\) has \(2m(2m-1)^2\) arcs, complementation gives
 \[
@@ -587,17 +635,36 @@ Then \(\widetilde h\) is antisymmetric and
 \end{lemma}
 
 \begin{proof}
-For instance \(j(ax)=\bar x b\) and
-\(\widetilde h(\bar x b)=L-\varepsilon_x-2=-\widetilde h(ax)\); the other
-cases are identical.  All new nonfixed levels have absolute value at least
-\(H_0+1\), so every new cross four-cycle contributes two arcs.  For a new/old
-block pair the two alternating directions have differences
+Write the new letters as \(n^-=a,n^+=b\), and write an old letter as
+\(x^\delta\), where \(\delta\in\{-1,+1\}\) records its sign in its moving
+block.  Then (7.2) is equivalently
+\[
+ \widetilde h(n^\varepsilon x^\delta)=\varepsilon L+\delta+2,
+ \qquad
+ \widetilde h(x^\delta n^\varepsilon)=\varepsilon L+\delta-2.
+\]
+These formulas and
+\(j(n^\varepsilon x^\delta)=x^{-\delta}n^{-\varepsilon}\) prove
+antisymmetry directly.  Every new nonfixed level has absolute value at least
+\(H_0+1\), so each of the eight fixed--free two-arc pairs belonging to a
+new/old block pair contributes exactly one arc.
+
+For \(\varepsilon,\zeta,\delta,\gamma\in\{-1,+1\}\), the two alternating
+families have differences
 \[
  (\zeta-\varepsilon)L-4,
  \qquad \gamma-\delta+4\in\{2,4,6\};
 \]
-the first contributes two arcs and the second eight, attaining ten.  On a
-triangle with the new block, its cyclic levels have the form
+the first is positive exactly when
+\((\varepsilon,\zeta)=(-1,+1)\), giving two arcs as \(\delta\) varies, and
+the second is positive for all eight choices.  Hence the alternating part
+attains ten, just as in the two-block row of the sector table.
+
+Now choose two distinct old letters \(x^\delta,y^\gamma\) from different
+old blocks.  On the directed triangle
+\(n^\varepsilon x^\delta\to x^\delta y^\gamma
+\to y^\gamma n^\varepsilon\to n^\varepsilon x^\delta\), its cyclic levels
+have the form
 \[
  p=\varepsilon L+\delta+2,
  \quad q\in[-H_0,H_0],
@@ -605,8 +672,14 @@ triangle with the new block, its cyclic levels have the form
 \]
 If \(\varepsilon=-1\), then \(r<p<q\); if \(\varepsilon=+1\), then
 \(q<r<p\).  Exactly two cyclic arcs increase in either case, and the reverse
-orientation is identical.  Old sectors remain sharp, so all new sector
-bounds and hence \(B_{r+1}\) are attained.
+orientation is covered by interchanging \(x^\delta\) and \(y^\gamma\).
+Thus all sixteen triangle cells for the new block and each old block pair
+attain two.  The within-new-block digon remains tied at zero, old sectors
+remain sharp, and the total increment is
+\[
+ 18r+32\binom r2=B_{r+1}-B_r.
+\]
+Consequently \(|I(\widetilde h)|=B_{r+1}\), as required.
 \end{proof}
 
 \begin{lemma}[Exact moving-block defect preservation]
@@ -1005,11 +1078,8 @@ of the 18 primitive walls having one form in each orientation.  It becomes a
 realized neighbour only when the flipped sharp mask has a certified nonempty
 cone and the exact one-wall segment test passes.
 
-Two bounded diagnostics do not enter the preceding proofs.  At \(m=2\), the
-projectivized sharp realization-cone facet graph has 36 chambers; its full
-centralizer quotient is a connected five-vertex graph and defect is
-1-Lipschitz on its sharp facet edges.  This behavior does not persist at
-\(m=3\): two certified sharp facet adjacencies have endpoint defects
+A bounded diagnostic does not enter the preceding proofs.  At \(m=3\), two
+certified sharp facet adjacencies have endpoint defects
 \((0,3)\) and \((4,1)\).  Thus defect is not 1-Lipschitz, and the maximum
 facet jump is at least three.  A bounded panel of 90 candidate flips finds 23
 realized neighbours, with jump histogram
@@ -1058,6 +1128,17 @@ python -B companion/verify\_bellman\_bundle.py\par
 python -B -O companion/verify\_bellman\_bundle.py
 \end{quote}
 The public replay uses no historical SQLite database.
+
+The four-letter rank-three obstruction of
+Proposition~\ref{prop:rank-three-obstruction} is reproduced by
+\begin{quote}\ttfamily\footnotesize\raggedright
+python -B companion/verify\_rank\_three\_obstruction.py\par
+python -B -O companion/verify\_rank\_three\_obstruction.py
+\end{quote}
+The standard-library checker enumerates all 99,000 linear extensions,
+reconstructs the 176 attained bad-cell sets, verifies that forced cells and
+pairwise incompatibilities are absent, and recovers the displayed triple as
+the unique inclusion-minimal obstruction.
 
 The exact occurrence statement in Proposition~\ref{prop:obstruction-occurrence}
 is reproduced by

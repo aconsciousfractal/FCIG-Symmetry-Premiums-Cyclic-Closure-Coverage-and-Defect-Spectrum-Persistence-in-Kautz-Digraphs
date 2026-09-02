@@ -45,12 +45,13 @@ GIT_ABSOLUTE=$(command -v git)
 Both commands must end with `PASS`. The verifier is bound to the current
 clean Git tree, accepts ordinary Git history, and writes no result file.
 
-For transparent direct replay, the five lanes are:
+For transparent direct replay, the six lanes are:
 
 ```bash
 python -B companion/verify_five_defect_witnesses.py
 python -B companion/verify_population.py
 python -B companion/verify_bellman_bundle.py
+python -B companion/verify_rank_three_obstruction.py
 python -B companion/verify_ten_relation_core.py
 python -B companion/verify_facet_counterexample.py
 ```

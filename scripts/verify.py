@@ -20,6 +20,7 @@ import verify_bellman_bundle as bellman  # noqa: E402
 import verify_facet_counterexample as facet  # noqa: E402
 import verify_five_defect_witnesses as witnesses  # noqa: E402
 import verify_population as population  # noqa: E402
+import verify_rank_three_obstruction as rank_three  # noqa: E402
 import verify_ten_relation_core as core  # noqa: E402
 
 
@@ -34,6 +35,7 @@ def main() -> int:
     population_result = population.audit()
     bellman_result = bellman.audit()
     witness_result = witnesses.audit()
+    rank_three_result = rank_three.audit()
     core_result = core.audit()
     facet_document = facet.load_json(facet.DEFAULT_CERTIFICATE)
     facet_result = facet.validate_certificate(facet_document)
@@ -66,6 +68,7 @@ def main() -> int:
             "hostile": bellman_result["hostile"],
         },
         "witnesses": witness_result,
+        "rank_three": rank_three_result,
         "ten_relation_core": {
             "covered_works": core_result["covered_works"],
             "covered_members": core_result["covered_members"],
