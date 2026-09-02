@@ -14,6 +14,7 @@ import hashlib
 import importlib.metadata
 import json
 import os
+import re
 import runpy
 import stat
 import subprocess
@@ -24,18 +25,76 @@ from pathlib import Path
 
 
 ROOT = Path(os.path.abspath(os.fspath(Path(__file__)))).parents[1]
-CONTEXT_KEY = "FCIG_HJELMSLEV_TRUSTED_RUNTIME_CONTEXT"
+LOCK_PATH = ROOT / "requirements.lock"
+CONTEXT_KEY = "FCIG_KAUTZ_TRUSTED_RUNTIME_CONTEXT"
 PRESERVED_KEYS = {
     "COMSPEC", "LANG", "LC_ALL", "LC_CTYPE", "PATHEXT", "SYSTEMROOT",
     "TEMP", "TMP", "TMPDIR", "TZ", "WINDIR", "SOURCE_DATE_EPOCH",
-    "FORCE_SOURCE_DATE", "FCIG_HJELMSLEV_ISOLATED_REPLAY",
+    "FORCE_SOURCE_DATE", "FCIG_KAUTZ_ISOLATED_REPLAY",
 }
 DEPENDENCIES = {
-    "numpy": "2.5.1",
+    "colorama": "0.4.6",
+    "iniconfig": "2.3.0",
+    "packaging": "26.2",
+    "pluggy": "1.6.0",
+    "pygments": "2.20.0",
     "pypdf": "6.14.2",
-    "sympy": "1.14.0",
-    "mpmath": "1.3.0",
+    "pytest": "9.1.1",
 }
+LOCK_REQUIREMENT = re.compile(
+    r"^([A-Za-z0-9][A-Za-z0-9._-]*)==([^\s\\]+)\s*\\$"
+)
+LOCK_HASH = re.compile(r"^--hash=sha256:[0-9a-f]{64}$")
+
+
+def canonical_distribution_name(name: str) -> str:
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def locked_dependency_versions(path: Path) -> dict[str, str]:
+    """Parse the fully hashed lock using only the standard library."""
+    rows: dict[str, str] = {}
+    current: str | None = None
+    hashed: set[str] = set()
+    for line_number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        stripped = raw.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        requirement = LOCK_REQUIREMENT.fullmatch(stripped)
+        if requirement:
+            if current is not None and current not in hashed:
+                raise ValueError(f"lock entry lacks a hash: {current}")
+            name = canonical_distribution_name(requirement.group(1))
+            if name in rows:
+                raise ValueError(f"duplicate lock entry at line {line_number}: {name}")
+            rows[name] = requirement.group(2)
+            current = name
+            continue
+        if LOCK_HASH.fullmatch(stripped):
+            if current is None:
+                raise ValueError(f"orphan lock hash at line {line_number}")
+            hashed.add(current)
+            continue
+        raise ValueError(f"unsupported lock syntax at line {line_number}: {stripped}")
+    if current is not None and current not in hashed:
+        raise ValueError(f"lock entry lacks a hash: {current}")
+    if not rows:
+        raise ValueError("dependency lock is empty")
+    return rows
+
+
+def require_lock_parity(path: Path = LOCK_PATH) -> dict[str, str]:
+    try:
+        locked = locked_dependency_versions(path)
+    except (OSError, UnicodeError, ValueError) as error:
+        raise SystemExit(f"FAIL trusted runtime: invalid requirements.lock: {error}") from error
+    if locked != DEPENDENCIES:
+        raise SystemExit(
+            "FAIL trusted runtime: bootstrap/requirements.lock dependency drift; "
+            f"bootstrap={json.dumps(DEPENDENCIES, sort_keys=True)} "
+            f"lock={json.dumps(locked, sort_keys=True)}"
+        )
+    return locked
 
 
 def sha256(path: Path) -> str:
@@ -157,6 +216,7 @@ def main() -> None:
     if not purelib.is_dir():
         raise SystemExit("FAIL trusted runtime: Python purelib is unavailable")
     sys.path.append(str(purelib))
+    require_lock_parity()
     dependencies = {
         name: distribution_identity(name, version)
         for name, version in DEPENDENCIES.items()
@@ -168,7 +228,7 @@ def main() -> None:
         if key.upper().startswith(("PYTHON", "GIT_"))
     )
     provisional_context = {
-        "schema": "fcig_hjelmslev_trusted_runtime_v1",
+        "schema": "fcig_kautz_trusted_runtime_v1",
         "python": {
             "executable": str(python_executable),
             "sha256": sha256(python_executable),
@@ -236,7 +296,7 @@ def main() -> None:
         target_sha256 = None
 
     transcript = {
-        "schema": "fcig_hjelmslev_runtime_execution_transcript_v1",
+        "schema": "fcig_kautz_runtime_execution_transcript_v1",
         "started_at_utc": datetime.now(timezone.utc).isoformat(),
         "runtime": provisional_context,
         "ambient_python_git_keys_removed": removed_keys,

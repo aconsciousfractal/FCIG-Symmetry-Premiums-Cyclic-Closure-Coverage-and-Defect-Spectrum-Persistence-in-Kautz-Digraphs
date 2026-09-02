@@ -12,12 +12,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BOOTSTRAP_REL = "scripts/runtime_bootstrap.py"
-CONTEXT_KEY = "FCIG_HJELMSLEV_TRUSTED_RUNTIME_CONTEXT"
+CONTEXT_KEY = "FCIG_KAUTZ_TRUSTED_RUNTIME_CONTEXT"
 BASE_ENVIRONMENT_KEYS = {
     "COMSPEC", "LANG", "LC_ALL", "LC_CTYPE", "PATH", "PATHEXT",
     "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "TZ", "WINDIR",
     "SOURCE_DATE_EPOCH", "FORCE_SOURCE_DATE",
-    "FCIG_HJELMSLEV_ISOLATED_REPLAY",
+    "FCIG_KAUTZ_ISOLATED_REPLAY",
     CONTEXT_KEY,
 }
 
@@ -48,7 +48,7 @@ def trusted_runtime_context() -> dict:
         data = json.loads(raw)
     except ValueError as exc:
         raise RuntimeError("trusted runtime context is invalid JSON") from exc
-    if data.get("schema") != "fcig_hjelmslev_trusted_runtime_v1":
+    if data.get("schema") != "fcig_kautz_trusted_runtime_v1":
         raise RuntimeError("trusted runtime context has the wrong schema")
 
     python = data.get("python", {})

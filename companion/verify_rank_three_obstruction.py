@@ -33,6 +33,53 @@ def need(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def is_kautz_arc(relation: Relation) -> bool:
+    left, right = relation
+    return left[1] == right[0]
+
+
+def has_alternate_path(
+    relations: Sequence[Relation], omitted: Relation,
+) -> bool:
+    source, target = omitted
+    adjacency: dict[Pair, list[Pair]] = {}
+    for relation in relations:
+        if relation == omitted:
+            continue
+        left, right = relation
+        adjacency.setdefault(left, []).append(right)
+    stack = [source]
+    seen = {source}
+    while stack:
+        vertex = stack.pop()
+        for successor in adjacency.get(vertex, ()):
+            if successor == target:
+                return True
+            if successor not in seen:
+                seen.add(successor)
+                stack.append(successor)
+    return False
+
+
+def relation_domain_profile(relations: Sequence[Relation]) -> dict[str, object]:
+    need(len(relations) == len(set(relations)), "duplicate base relation")
+    covers = sum(not has_alternate_path(relations, relation) for relation in relations)
+    kautz_arcs = sum(is_kautz_arc(relation) for relation in relations)
+    non_kautz_covers = sum(
+        not is_kautz_arc(relation) and not has_alternate_path(relations, relation)
+        for relation in relations
+    )
+    need(covers == 10, "the ten displayed relations must all be covers")
+    need(kautz_arcs == 2, "Kautz-arc cover count mismatch")
+    need(non_kautz_covers == 8, "non-Kautz cover count mismatch")
+    return {
+        "domain": "arbitrary_precedence_poset_not_kautz_predecessor_dag",
+        "generating_covers": covers,
+        "kautz_arc_covers": kautz_arcs,
+        "non_kautz_covers": non_kautz_covers,
+    }
+
+
 def oriented_cells(q: int = 4) -> tuple[Cell, ...]:
     cells: list[Cell] = []
     for a, b, c in itertools.combinations(range(q), 3):
@@ -108,6 +155,7 @@ def minimal_infeasible_subsets(
 
 
 def audit(relations: Sequence[Relation] = RELATIONS) -> dict[str, object]:
+    domain = relation_domain_profile(relations)
     histogram = enumerate_bad_sets(relations)
     total = sum(histogram.values())
     one_bad = sum(count for bad, count in histogram.items() if len(bad) == 1)
@@ -129,6 +177,7 @@ def audit(relations: Sequence[Relation] = RELATIONS) -> dict[str, object]:
     minimal = minimal_infeasible_subsets(histogram, names)
     need(minimal == (EXPECTED_OBSTRUCTION,), "minimal obstruction mismatch")
     return {
+        **domain,
         "linear_extensions": total,
         "one_bad_extensions": one_bad,
         "distinct_bad_sets": len(histogram),
@@ -146,7 +195,8 @@ def main() -> int:
         "RANK_THREE_PASS "
         f"extensions={result['linear_extensions']} "
         f"bad_sets={result['distinct_bad_sets']} "
-        f"minimal={len(result['minimal_obstruction'])}"
+        f"minimal={len(result['minimal_obstruction'])} "
+        f"non_kautz_covers={result['non_kautz_covers']}"
     )
     return 0
 

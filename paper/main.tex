@@ -61,13 +61,16 @@ An exact finite census at \((m,f)=(3,0)\), accompanied here by one explicit
 certificate for each value, therefore implies that defects \(0,1,2,3,4\)
 are all attained for every \(m\geq3\) and \(f\geq0\).  This last conclusion
 is attainability only: no equality of later spectra, general upper bound four,
-or interval theorem is asserted.  More generally, defect is the transversal
+or interval theorem is asserted.  More generally, for an arbitrary acyclic
+precedence relation on the line-digraph vertices, defect is the transversal
 number of the clutter of minimal infeasible bad-cell constraints.  Forced
 cells and a matching of pairwise incompatibilities give a sound lower
-certificate, while a four-letter rank-three example shows that this
-certificate need not be exact.  At the six-letter base, a ten-relation
-precedence core forces four bad triangle cells by a \(2+1+1\) argument and
-occurs in exactly 24 of the 1,759 symmetry classes in the census.
+certificate.  A four-letter rank-three precedence poset outside the Kautz
+predecessor-arc subclass shows that this certificate need not be exact in the
+larger domain; tightness within the Kautz subclass remains open.  At the
+six-letter base, a ten-relation precedence core forces four bad triangle cells
+by a \(2+1+1\) argument and occurs in exactly 24 of the 1,759 symmetry classes
+in the census.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Kautz digraphs; feedback vertex sets;
@@ -104,9 +107,12 @@ generated invariant optima coexist.
 \item The defect spectrum is monotone under adjoining moving blocks and fixed
 letters.  A certified six-letter base therefore yields persistent attained
 defects \(0,1,2,3,4\) for every \(m\geq3\).
-\item Defect equals the transversal number of an exact obstruction clutter.
-Its singleton and pair members yield a forced-cell-plus-matching lower bound,
-which a rank-three four-letter obstruction shows need not always be tight.
+\item For arbitrary acyclic precedence relations, defect equals the
+transversal number of an exact obstruction clutter.  Its singleton and pair
+members yield a forced-cell-plus-matching lower bound.  A rank-three
+four-letter precedence poset outside the Kautz predecessor-arc subclass shows
+that the bound need not be tight in this larger domain; Kautz-specific
+tightness remains open.
 \item A ten-relation order core gives a short human explanation for a family
 of extremal defect-four objects in the six-letter census.
 \end{enumerate}
@@ -871,9 +877,12 @@ the two oriented triangle cells, with cyclic comparisons
 \]
 A total order makes either one or two comparisons in each cell true; the cell
 is bad in the former case.  Let \(\mathcal T_q\) be the set of all these
-oriented triangle cells.  In this section formula (3.1) defines
-\(\delta_H(P)\) for any acyclic predecessor arc set, not necessarily a
-maximum one.  For such a set \(P\) and
+oriented triangle cells.  In this section we deliberately allow \(P\) to be
+an arbitrary acyclic precedence relation on \(V(H)\), not necessarily a
+subset of \(E(H)\).  Formula (3.1), with \(\Top(P)\) interpreted as the linear
+extensions of this relation, then defines \(\delta_H(P)\).  When
+\(P\subseteq E(H)\), this specializes to the Kautz predecessor-arc setting of
+the preceding sections.  For such a relation \(P\) and
 \(S\subseteq\mathcal T_q\), write \(\operatorname{Good}_P(S)\) when some
 order in \(\Top(P)\) makes every cell of \(S\) good.  Define the obstruction
 clutter
@@ -890,7 +899,7 @@ and does not import a result from those papers.
 
 \begin{theorem}[Exact obstruction-clutter formula]
 \label{thm:obstruction-clutter}
-For every acyclic predecessor arc set \(P\),
+For every acyclic precedence relation \(P\) on \(V(H)\),
 \[
  \delta_H(P)=\tau(\mathcal H(P)),                         \tag{10.2}
 \]
@@ -921,7 +930,7 @@ by joining \(T\) and \(U\) when
 
 \begin{corollary}[Forced cells plus matching]
 \label{cor:forced-matching}
-For every acyclic \(P\),
+For every acyclic precedence relation \(P\) on \(V(H)\),
 \[
  \delta_H(P)\geq |F(P)|+\nu(G(P)).                       \tag{10.3}
 \]
@@ -935,8 +944,11 @@ transversal contains all forced cells and at least one endpoint of each
 matching edge.  Apply Theorem~\ref{thm:obstruction-clutter}.
 \end{proof}
 
-The lower certificate (10.3) is not always exact.  The following small
-control prevents higher-rank obstructions from being silently discarded.
+The lower certificate (10.3) is not always exact in the broader precedence-
+poset domain.  The following small control prevents higher-rank obstructions
+from being silently discarded.  It is intentionally not a Kautz
+predecessor-DAG example: all ten displayed relations are covers, but only
+\(01<13\) and \(03<32\) are arcs of the Kautz line digraph.
 
 \begin{proposition}[A rank-three obstruction]
 \label{prop:rank-three-obstruction}
@@ -952,7 +964,10 @@ Then \(F(P)=\varnothing\), \(G(P)\) has no edge, but
 \[
  \{T^+_{012},T^-_{023},T^-_{123}\}.
 \]
-Thus equality in (10.3) is false in general.
+Thus equality in (10.3) is false for arbitrary acyclic precedence relations.
+This proposition does not establish failure for the subclass
+\(P\subseteq E(H)\); whether (10.3) is always tight in that Kautz subclass is
+left open.
 \end{proposition}
 
 \begin{proof}
@@ -1129,16 +1144,18 @@ python -B -O companion/verify\_bellman\_bundle.py
 \end{quote}
 The public replay uses no historical SQLite database.
 
-The four-letter rank-three obstruction of
+The broader-domain four-letter rank-three obstruction of
 Proposition~\ref{prop:rank-three-obstruction} is reproduced by
 \begin{quote}\ttfamily\footnotesize\raggedright
 python -B companion/verify\_rank\_three\_obstruction.py\par
 python -B -O companion/verify\_rank\_three\_obstruction.py
 \end{quote}
-The standard-library checker enumerates all 99,000 linear extensions,
-reconstructs the 176 attained bad-cell sets, verifies that forced cells and
-pairwise incompatibilities are absent, and recovers the displayed triple as
-the unique inclusion-minimal obstruction.
+The standard-library checker first verifies that the ten generators are
+covers, exactly two are Kautz arcs and eight are non-Kautz covers.  It then
+enumerates all 99,000 linear extensions, reconstructs the 176 attained
+bad-cell sets, verifies that forced cells and pairwise incompatibilities are
+absent, and recovers the displayed triple as the unique inclusion-minimal
+obstruction.
 
 The exact occurrence statement in Proposition~\ref{prop:obstruction-occurrence}
 is reproduced by

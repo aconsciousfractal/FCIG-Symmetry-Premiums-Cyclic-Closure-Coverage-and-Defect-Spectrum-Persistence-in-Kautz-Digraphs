@@ -21,8 +21,10 @@ by reverse complementation, the paper proves:
 - defect spectra are monotone under adjoining moving blocks and fixed letters;
 - the exact six-letter base spectrum is `{0,1,2,3,4}`, so all five defects
   persist for every `m>=3` and `f>=0`;
-- defect is the transversal number of a minimal-obstruction clutter, with a
-  sound but not universally exact forced-cell-plus-matching lower bound;
+- for arbitrary acyclic precedence relations on the line-digraph vertices,
+  defect is the transversal number of a minimal-obstruction clutter;
+- the forced-cell-plus-matching lower bound can fail to be exact in that
+  broader domain, as shown by a non-Kautz rank-three precedence poset;
 - a ten-relation precedence core explains 24 of the 42 defect-four classes in
   the six-letter census.
 
@@ -36,16 +38,22 @@ Install the hash-locked inspection environment, then run the exact replay:
 
 ```bash
 python -m pip install --require-hashes -r requirements.lock
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git --target scripts/verify.py
-python -I -S -B -O scripts/runtime_bootstrap.py --git-executable git --target scripts/verify.py
+GIT_ABSOLUTE="$(command -v git)"
+python -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
+python -I -S -B -O scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
 ```
+
+The bootstrap parses `requirements.lock` using only the standard library and
+rejects any mismatch between the locked distributions and the runtime
+dependency contract before executing a verifier.
 
 The verifier checks the manifest and release surface, independently rebuilds
 the finite population, validates all 3,518 opposed Bellman tables and all
-83,736 mask-to-class assignments, verifies the five spectrum witnesses, finds
-the unique four-letter rank-three obstruction and the 24 ten-relation-core
-classes, and reconstructs the exact facet counterexamples. It writes no
-scientific result file.
+83,736 mask-to-class assignments, verifies the five spectrum witnesses,
+certifies that the four-letter rank-three control is a broader precedence
+poset rather than a Kautz predecessor DAG, finds its unique obstruction and
+the 24 ten-relation-core classes, and reconstructs the exact facet
+counterexamples. It writes no scientific result file.
 
 The committed paper is
 `paper/Symmetry-Premiums-Cyclic-Closure-Coverage-and-Defect-Spectrum-Persistence-in-Kautz-Digraphs.pdf`.
@@ -70,6 +78,8 @@ them. Two potentially relevant 2015/2016 Kautz sources were available only
 through catalog or issue metadata, not full text. Accordingly, this repository
 makes no novelty, priority, or exhaustive-literature claim. It also makes no
 claim that the defect spectrum is always an interval or bounded above by four.
+The nonexact rank-three control does not settle whether the
+forced-cell-plus-matching bound is always tight for Kautz predecessor DAGs.
 
 Related earlier work by the same author concerns literal
 reverse-complement-invariant **ordinary** minimum decycling sets in q-ary de

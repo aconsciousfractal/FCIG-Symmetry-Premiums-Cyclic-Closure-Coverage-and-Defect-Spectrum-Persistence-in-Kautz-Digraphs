@@ -63,6 +63,10 @@ def test_human_ten_relation_bound() -> None:
 
 def test_rank_three_obstruction_and_relation_mutation() -> None:
     result = rank_three.audit()
+    assert result["domain"] == "arbitrary_precedence_poset_not_kautz_predecessor_dag"
+    assert result["generating_covers"] == 10
+    assert result["kautz_arc_covers"] == 2
+    assert result["non_kautz_covers"] == 8
     assert result["linear_extensions"] == 99_000
     assert result["distinct_bad_sets"] == 176
     assert result["minimum_bad_cells"] == 1

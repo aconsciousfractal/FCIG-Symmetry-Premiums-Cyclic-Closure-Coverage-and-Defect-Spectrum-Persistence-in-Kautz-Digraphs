@@ -7,17 +7,20 @@ written proofs, exact finite computations, and release integrity.
 
 ```bash
 python -m pip install --require-hashes -r requirements.lock
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git --target scripts/verify.py
-python -I -S -B -O scripts/runtime_bootstrap.py --git-executable git --target scripts/verify.py
+GIT_ABSOLUTE="$(command -v git)"
+python -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
+python -I -S -B -O scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/verify.py
 ```
 
 Both runs must end in `PASS`. The optimized replay checks that validation does
-not disappear under `python -O`.
+not disappear under `python -O`. Before either run, the bootstrap requires
+exact equality between its dependency contract and `requirements.lock`.
 
 ## 2. Focused hostile tests
 
 ```bash
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git --module pytest -- \
+GIT_ABSOLUTE="$(command -v git)"
+python -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --module pytest -- \
   -q -p no:cacheprovider --basetemp /tmp/kautz-symmetry-pytest \
   tests/test_kautz_symmetry.py tests/test_release_assurance.py
 ```
@@ -35,7 +38,8 @@ redirection.
 4. cyclic-closure coverage criterion;
 5. monotonicity of defect spectra;
 6. exact base census and five witnesses at `(m,f)=(3,0)`;
-7. obstruction-clutter equality and forced-cell/matching bound;
+7. obstruction-clutter equality for arbitrary acyclic precedence relations
+   and the forced-cell/matching bound;
 8. ten-relation defect-four core and bounded facet counterexamples.
 
 Scrutinize especially the distinction between invariant optima and literal
@@ -49,8 +53,10 @@ fact that the facet panel is bounded rather than global.
 - `verify_bellman_bundle.py` expands all classes and validates every one of the
   83,736 membership assignments plus all opposed dynamic-programming tables.
 - `verify_five_defect_witnesses.py` proves the five finite attainments.
-- `verify_rank_three_obstruction.py` enumerates the 99,000 four-letter linear
-  extensions and recovers the unique minimal rank-three obstruction.
+- `verify_rank_three_obstruction.py` verifies that the ten generators are
+  covers with exactly eight non-Kautz covers, enumerates the 99,000
+  four-letter linear extensions, and recovers the unique minimal rank-three
+  obstruction in the broader precedence-poset domain.
 - `verify_ten_relation_core.py` discovers the 24 classes without reading a
   stored defect-label oracle, then verifies exact defect four.
 - `verify_facet_counterexample.py` rebuilds the 75 forms, 54 walls, two exact
@@ -65,6 +71,8 @@ analytic theorems or settle novelty.
 - no universal upper bound four;
 - no interval-spectrum theorem;
 - no full six-letter facet graph or global maximum jump;
+- no conclusion that the forced-cell/matching bound fails, or is always
+  tight, within the Kautz predecessor-DAG subclass;
 - no novelty, priority, or exhaustive-source conclusion;
 - no PDF/UA conformance claim.
 

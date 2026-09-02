@@ -43,7 +43,10 @@ GIT_ABSOLUTE=$(command -v git)
 ```
 
 Both commands must end with `PASS`. The verifier is bound to the current
-clean Git tree, accepts ordinary Git history, and writes no result file.
+clean Git tree, accepts ordinary Git history, and writes no result file. The
+bootstrap first parses `requirements.lock` using only the standard library and
+requires its complete distribution/version map to equal the bootstrap
+contract, so an undeclared runtime dependency fails closed.
 
 For transparent direct replay, the six lanes are:
 
@@ -63,7 +66,9 @@ the multi-megabyte finite package.
 ## Hostile tests
 
 ```bash
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git \
+PYTHON_ABSOLUTE=$(python -I -S -c 'import sys; print(sys.executable)')
+GIT_ABSOLUTE=$(command -v git)
+"$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" \
   --module pytest -- -q -p no:cacheprovider \
   --basetemp /tmp/kautz-symmetry-pytest \
   tests/test_kautz_symmetry.py tests/test_release_assurance.py
@@ -75,8 +80,10 @@ An optimized pytest run is a compatibility smoke test only; ordinary Python
 ## Integrity layers
 
 ```bash
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git --target scripts/check_manifest.py
-python -I -S -B scripts/runtime_bootstrap.py --git-executable git --target scripts/check_release.py
+PYTHON_ABSOLUTE=$(python -I -S -c 'import sys; print(sys.executable)')
+GIT_ABSOLUTE=$(command -v git)
+"$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/check_manifest.py
+"$PYTHON_ABSOLUTE" -I -S -B scripts/runtime_bootstrap.py --git-executable "$GIT_ABSOLUTE" --target scripts/check_release.py
 ```
 
 `MANIFEST_SHA256.txt` covers every environment-independent public file except
@@ -117,8 +124,9 @@ committed output is:
 Clone the exact candidate into a fresh temporary directory, install the locked
 environment, run both aggregate replays and the hostile suite, build twice,
 compare PDF bytes and semantics, and require `git status --porcelain` to remain
-empty. No remote, push, tag, release, preprint, or submission is created by
-these instructions.
+empty. Use that fresh clone as the release checkout: it excludes unreachable
+objects retained only by a development reflog. No remote, push, tag, release,
+preprint, or submission is created by these instructions.
 
 ## Limits
 

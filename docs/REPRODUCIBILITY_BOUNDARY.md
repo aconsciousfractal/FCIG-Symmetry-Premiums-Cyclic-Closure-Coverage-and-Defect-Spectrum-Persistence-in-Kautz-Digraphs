@@ -12,13 +12,17 @@
   defect histograms
   `445,555,420,297,42` and `20,976,26,640,19,896,14,208,2,016`;
 - one exact finite witness for each defect `0,1,2,3,4`;
-- all 99,000 linear extensions of the four-letter rank-three example, its 176
-  attained bad-cell sets, and its unique minimal three-cell obstruction;
+- the domain profile of the four-letter rank-three control (ten cover
+  relations, exactly two Kautz arcs and eight non-Kautz covers), all 99,000
+  linear extensions, its 176 attained bad-cell sets, and its unique minimal
+  three-cell obstruction;
 - all 24 ten-relation-core classes and all 1,152 labelled members;
 - the two exact jump-three facet counterexamples and the 90-flip bounded panel.
 
 All scientific checkers use the Python standard library. pypdf and pytest are
-needed only for release inspection and tests.
+needed only for release inspection and tests. The standard-library bootstrap
+parses `requirements.lock` and refuses to run unless its complete distribution
+and version map is identical to the lock.
 
 ## Independence qualification
 
@@ -38,7 +42,9 @@ scores and does not use a stored defect-label oracle.
 The package does not computationally prove the all-parameter premium,
 coverage, extension, monotonicity, or obstruction-clutter theorems. Those are
 written arguments in the manuscript. Nor does it compute the global
-six-letter facet graph, settle novelty, or close unavailable literature.
+six-letter facet graph, settle novelty, close unavailable literature, or
+settle tightness of the forced-cell/matching bound inside the Kautz
+predecessor-DAG subclass.
 
 `MANIFEST_SHA256.txt` authenticates the environment-independent source and
 data surface. `RELEASE_SHA256.txt` additionally authenticates the committed
