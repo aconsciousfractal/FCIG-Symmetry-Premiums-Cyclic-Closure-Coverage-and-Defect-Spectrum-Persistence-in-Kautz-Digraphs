@@ -18,7 +18,8 @@ by reverse complementation, the paper proves:
 - in the nonidentity domain, every invariant optimum is the cyclic closure of
   an ordinary optimum exactly for `m=1`; for `m>=2`, closure-generated and
   non-closure-generated optima coexist;
-- defect spectra are monotone under adjoining moving blocks and fixed letters;
+- the proved spectrum inclusion is `D_(r,0) subset D_(m,f)` for
+  `m>=r>=1` and `f>=0`: moving blocks are added before fixed letters;
 - the exact six-letter base spectrum is `{0,1,2,3,4}`, so all five defects
   persist for every `m>=3` and `f>=0`;
 - for arbitrary acyclic precedence relations on the line-digraph vertices,
@@ -86,8 +87,18 @@ reverse-complement-invariant **ordinary** minimum decycling sets in q-ary de
 Bruijn graphs. It is cited and explicitly separated in the manuscript; it is
 not a second paper produced by this repository.
 
+## AI assistance and verification
+
+AI assistance was used in this research project. The public manuscript does
+not record the original-development model names, versions, or attribution of
+individual proof steps. OpenAI Codex assisted the pre-submission mathematical
+review, computational replays and editorial preparation. These checks do not
+constitute independent specialist review or proof-assistant verification.
+The author remains responsible for the mathematical claims.
+
 ## Licence
 
-Companion code and repository documentation are MIT-licensed. Manuscript
-copyright is retained by the author. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md)
+Companion code and repository documentation are MIT-licensed. The manuscript
+source and compiled paper are available under CC BY 4.0, with copyright
+retained by the author. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md)
 and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
